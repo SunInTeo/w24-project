@@ -1,0 +1,110 @@
+.table-container {
+  width: 100%;
+  max-height: 450px;
+  border: 1px solid var(--secondary-color);
+  border-radius: 10px;
+  margin: 16px 0;
+  overflow: auto;
+  position: relative;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  table-layout: fixed;
+}
+
+.table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  font-weight: bold;
+}
+
+.table tbody td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.table tbody td:nth-child(2),
+.table thead th:nth-child(2) {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+  word-wrap: break-word;
+}
+
+.table tbody tr:hover {
+  background-color: var(--tertiary-color);
+  cursor: pointer;
+}
+
+.table th,
+.table td {
+  padding: 12px 16px;
+  text-align: left;
+  border: 1px solid var(--secondary-color);
+  box-sizing: border-box;
+}
+
+.table th.sticky-column,
+.table td.sticky-column {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background-color: var(--background-color);
+}
+
+.table th.sticky-column:nth-child(2),
+.table td.sticky-column:nth-child(2) {
+  left: 150px;
+  z-index: 2;
+  background-color: var(--background-color);
+}
+
+.table-container::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.table-container::-webkit-scrollbar-track {
+  background: var(--background-color);
+  border-radius: 10px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+  background-color: var(--primary-color);
+  border-radius: 10px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+  background-color: var(--tertiary-color);
+}
+
+@media (max-width: 768px) {
+  .table-container {
+    border: 1px solid var(--secondary-color);
+    overflow-x: auto;
+  }
+
+  .table {
+    min-width: 600px;
+    width: 100%;
+  }
+
+  .table tbody td {
+    white-space: nowrap;
+  }
+
+  .table tbody td::before {
+    display: none;
+  }
+
+  .table tbody tr:hover {
+    background-color: var(--tertiary-color);
+  }
+}

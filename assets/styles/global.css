@@ -1,0 +1,116 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap");
+
+:root {
+  --primary-color: #4059ad;
+  --secondary-color: #6b9ac4;
+  --tertiary-color: #97d8c4;
+  --background-color: #eff2f1;
+  --accent-color: #f4b942;
+  --text-color: #ffffff;
+  --focus-border-color: #97d8c4;
+  --focus-shadow-color: rgba(151, 216, 196, 0.5);
+  --overlay-color: rgba(0, 0, 0, 0.5);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 100%;
+  background-color: var(--background-color);
+  font-family: "Nunito", Aria, sans-serif;
+}
+
+.divider {
+  border-top: 2px solid var(--secondary-color);
+  margin: 20px 0;
+}
+
+/* Typography styles */
+
+/* Headings */
+h1,
+h2,
+h3 {
+  color: var(--primary-color);
+  margin: 16px 0;
+}
+
+h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  line-height: 1.3;
+}
+
+h3 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  line-height: 1.4;
+}
+
+/* Paragraphs */
+p {
+  color: var(--secondary-color);
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 12px 0;
+}
+
+/* Links */
+a {
+  color: var(--accent-color);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--tertiary-color);
+}
+
+/* Additional Text Styling */
+strong {
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+em {
+  font-style: italic;
+  color: var(--secondary-color);
+}
+
+.small {
+  font-size: small;
+}
+.x-small {
+  font-size: x-small;
+}
+.medium {
+  font-size: medium;
+}
+.large {
+  font-size: large;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: transparent;
+  color: white;
+  font-size: smaller;
+  text-align: center;
+  padding: 10px 0;
+}
+
+.main-overflow {
+  padding: 30px;
+  height: 80vh;
+  overflow: scroll;
+}

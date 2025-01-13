@@ -1,0 +1,68 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f0f0;
+}
+.container {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  padding: 20px;
+  background-color: transparent;
+  border-radius: 10px;
+}
+
+.card {
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.card-body img {
+  max-width: 100px;
+  height: auto;
+  margin-bottom: 10px;
+}
+.card-body h3 {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin: 0;
+}
+
+img#projects:hover {
+  cursor: pointer;
+  content: url("../../../assets/images/open-folder.png");
+}
+
+img#paper:hover {
+  cursor: pointer;
+  content: url("../../../assets/images/paper-open.png");
+}
+
+img#timetable:hover {
+  cursor: pointer;
+  content: url("../../../assets/images/calendar-open.png");
+}
+
+img#account:hover {
+  cursor: pointer;
+  content: url("../../../assets/images/skills-open.png");
+}

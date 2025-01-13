@@ -1,0 +1,129 @@
+/* Input styles */
+.input-container {
+  position: relative;
+  width: 100%;
+}
+
+.input-container input {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  box-sizing: border-box;
+  border: 2px solid var(--secondary-color);
+  border-radius: 10px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  padding-right: 70px;
+  padding-left: 40px;
+}
+
+.input-container input:focus {
+  border-color: var(--focus-border-color);
+  box-shadow: 0 0 5px var(--focus-shadow-color);
+  outline: none;
+}
+
+.input-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--secondary-color);
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.clear-button {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--secondary-color);
+  border: none;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: none;
+}
+
+.input-container input:not(:placeholder-shown) + .clear-button {
+  display: flex;
+}
+
+.clear-button:hover {
+  color: var(--tertiary-color);
+}
+
+.toggle-password {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  font-size: 1rem;
+  color: var(--secondary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.input-container input:placeholder-shown ~ .toggle-password {
+  right: 10px;
+}
+
+.input-container input:not(:placeholder-shown) ~ .toggle-password {
+  right: 40px;
+}
+
+.toggle-password:hover {
+  color: var(--tertiary-color);
+}
+
+@media screen and (max-width: 768px) {
+  .input-container input {
+    font-size: 14px;
+    padding: 8px 8px 8px 35px;
+    padding-right: 60px;
+    height: 40px;
+  }
+
+  .input-icon {
+    font-size: 0.9rem;
+    left: 8px;
+  }
+
+  .clear-button,
+  .toggle-password {
+    width: 25px;
+    height: 25px;
+    font-size: 0.9rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .input-container input {
+    font-size: 13px;
+    padding: 6px 6px 6px 30px;
+    padding-right: 50px;
+    height: 35px;
+  }
+
+  .input-icon {
+    font-size: 0.8rem;
+    left: 5px;
+  }
+
+  .clear-button,
+  .toggle-password {
+    width: 20px;
+    height: 20px;
+    font-size: 0.8rem;
+  }
+}

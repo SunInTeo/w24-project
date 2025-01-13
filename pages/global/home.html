@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title data-i18n="home-title"></title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../components/styles/main.css" />
+    <link rel="stylesheet" href="../../assets/styles/global.css" />
+    <link rel="stylesheet" href="./styles/home.style.css" />
+  </head>
+  <body>
+    <nav class="nav"></nav>
+    <main>
+      <div class="container">
+        <div class="card">
+          <div class="card-body" onclick="navigateTo('papers')">
+            <img src="../../assets/images/paper.png" id="paper" alt="Paper" />
+            <h3 data-i18n="card-paper"></h3>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body" onclick="navigateTo('projects')">
+            <img
+              src="../../assets/images/folder.png"
+              id="projects"
+              alt="Project topics"
+            />
+            <h3 data-i18n="card-project-topics"></h3>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body" onclick="navigateTo('schedule')">
+            <img
+              src="../../assets/images/calendar.png"
+              id="timetable"
+              alt="Timetable"
+            />
+            <h3 data-i18n="card-timetable"></h3>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body" onclick="navigateTo('settings')">
+            <img
+              src="../../assets/images/skills.png"
+              id="account"
+              alt="My account"
+            />
+            <h3 data-i18n="card-my-account"></h3>
+          </div>
+        </div>
+      </div>
+    </main>
+    <div class="language-toggle"></div>
+
+    <script src="../../localization/local.script.js"></script>
+    <script src="../../components/javascript/nav.script.js"></script>
+  </body>
+</html>

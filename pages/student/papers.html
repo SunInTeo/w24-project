@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title data-i18n="card-paper"></title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../components/styles/main.css" />
+    <link rel="stylesheet" href="../../assets/styles/global.css" />
+  </head>
+  <body>
+    <nav class="nav"></nav>
+
+    <section class="container container-85">
+      <article>
+        <div class="flex-container page-actions">
+          <button
+            class="download-table-button"
+            onclick="downloadTableAsExcel('research_papers')"
+            data-i18n="download-xlsx"
+          ></button>
+          <button
+            class="propose-button"
+            data-i18n="propose-topic"
+            onclick="openModal('propose-topic-modal','propose-topic-modal-overlay')"
+          ></button>
+        </div>
+
+        <div class="table-container">
+          <table class="table" id="research_papers">
+            <thead>
+              <tr>
+                <th data-i18n="table-topic-number"></th>
+                <th data-i18n="table-topic-name"></th>
+                <th data-i18n="table-sample-resources"></th>
+                <th data-i18n="table-your-resources"></th>
+                <th data-i18n="table-presentation-content"></th>
+                <th data-i18n="table-sample-content"></th>
+                <th data-i18n="table-presentation-resume"></th>
+                <th data-i18n="table-keywords"></th>
+                <th data-i18n="table-non-formal"></th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div
+          class="drawer-overlay"
+          id="drawerOverlay"
+          onclick="closeDrawer()"
+        ></div>
+        <div class="drawer" id="drawer">
+          <div class="drawer-header">
+            <span>Drawer header</span>
+            <button
+              class="close-drawer-button"
+              aria-label="Close drawer"
+              onclick="closeDrawer()"
+            >
+              &times;
+            </button>
+          </div>
+          <div class="drawer-content"></div>
+        </div>
+      </article>
+    </section>
+
+    <section>
+      <article>
+        <div
+          class="modal-overlay"
+          id="propose-topic-modal-overlay"
+          style="display: none"
+        ></div>
+        <div class="modal" id="propose-topic-modal" style="display: none">
+          <div class="modal-header">
+            <span data-i18n="propose-topic"></span>
+            <button
+              class="modal-close-button"
+              aria-label="Close modal"
+              onclick="closeModal('propose-topic-modal','propose-topic-modal-overlay')"
+            >
+              &times;
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="block-container">
+              <span data-i18n="propose-topic-text"></span>
+              <div class="input-container">
+                <i class="input-icon fa-solid fa-a"></i>
+                <input
+                  type="text"
+                  id="proposedTopic"
+                  data-i18n-placeholder="propose-topic-modal"
+                />
+                <button
+                  class="clear-button"
+                  aria-label="Clear input"
+                  title="Clear input"
+                >
+                  &times;
+                </button>
+              </div>
+              <textarea
+                class="textarea-component"
+                id="proposeTopicText"
+                data-i18n-placeholder="propose-topic-textarea"
+                rows="7"
+                required
+              ></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="primary" data-i18n="send-text"></button>
+            <button
+              class="secondary"
+              onclick="closeModal('propose-topic-modal','propose-topic-modal-overlay')"
+              data-i18n="cancel-text"
+            ></button>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <div class="language-toggle"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="../../localization/local.script.js"></script>
+    <script src="../../components/javascript/nav.script.js"></script>
+    <script src="../../components/javascript/input.script.js"></script>
+    <script src="../../components/javascript/modal.script.js"></script>
+    <script src="../../components/javascript/drawer.script.js"></script>
+    <script src="./javascript/papers.script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,100 @@
+main {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+  justify-content: center;
+  width: 70%;
+  border-radius: 20px;
+  overflow: hidden;
+  margin: auto;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 500px;
+}
+
+main > * {
+  grid-row: 1 / 2;
+  height: 100%;
+}
+
+.login,
+.signup {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+  padding: 0;
+  color: #fff;
+  font-size: 23px;
+  background-color: var(--secondary-color);
+  height: 100%;
+}
+
+.login span,
+.signup span {
+  font-weight: bolder;
+  text-align: center;
+}
+
+.login {
+  grid-column: 1 / 2;
+}
+
+.signup {
+  grid-column: 2 / 3;
+}
+
+.login-form {
+  grid-column: 1 / 2;
+  transform: translateX(-100%);
+}
+
+.signup-form {
+  grid-column: 2 / 3;
+  transform: translateX(100%);
+}
+
+form {
+  padding: 0px 20px;
+  max-width: 700px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: transform 0.5s;
+  margin: auto;
+  height: 100%;
+}
+
+form.active {
+  transform: translateX(0);
+}
+
+.back-layer {
+  grid-column: 1 / 3;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  clip-path: inset(0 50% 0 0);
+  background-color: #fff;
+  z-index: 5;
+  transition: clip-path 0.3s;
+  border-radius: 20px;
+  height: 100%;
+}
+
+.forgotten-password-container {
+  margin: 0px 0px 10px 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.signup-button {
+  margin-top: 10px;
+}
+
+.modal {
+  max-width: 400px;
+}

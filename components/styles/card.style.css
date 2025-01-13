@@ -1,0 +1,29 @@
+/* Card component styles */
+.card {
+  background-color: #fff;
+  border: 1px solid var(--secondary-color);
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin: 16px 0;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.card-header {
+  color: var(--primary-color);
+  padding: 16px;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.card-body {
+  padding: 16px;
+  font-size: 1rem;
+  color: #333;
+}
+
+.card-footer {
+  padding: 16px;
+  text-align: right;
+}

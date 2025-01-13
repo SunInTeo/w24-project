@@ -1,0 +1,113 @@
+.register-team-button,
+.edit-team-button {
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  border: none;
+  padding: 8px 12px;
+  font-size: small;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 5px;
+}
+
+.register-team-button:hover,
+.edit-team-button:hover {
+  background-color: var(--secondary-color);
+}
+
+.flex-container.row {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: center;
+  width: 100%;
+  padding: 0%;
+}
+
+.input-container.row-input {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+#fn-input {
+  flex: 1;
+}
+
+#name-input {
+  flex: 2;
+}
+
+@media (max-width: 600px) {
+  .flex-container.row {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+.add-button {
+  margin-top: 16px;
+  background-color: #4caf50;
+  color: white;
+  font-size: 12px;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.add-button:hover {
+  background-color: #45a049;
+}
+
+.remove-button {
+  background-color: #f44336;
+  color: white;
+  font-size: 12px;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  align-self: center;
+}
+
+.remove-button:hover {
+  background-color: #e53935;
+}
+
+#edit-fields {
+  overflow-y: auto;
+  max-height: 100px;
+}
+
+.toggle-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.toggle-button {
+  padding: 8px 16px;
+  border: none;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.toggle-button.active {
+  background-color: #d0e1f9;
+  color: var(--secondary-color);
+  border: 1px solid var(--secondary-color);
+}
+
+.section {
+  display: block;
+}
+
+.section.hidden {
+  display: none;
+}
+
+.comments-container {
+  margin-top: 15px;
+}

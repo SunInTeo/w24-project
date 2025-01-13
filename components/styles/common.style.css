@@ -1,0 +1,53 @@
+.container {
+  margin-top: 70px;
+  padding: 20px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.download-table-button {
+  background-color: var(--accent-color);
+  color: var(--text-color);
+  border: none;
+  padding: 8px 12px;
+  font-size: small;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 5px;
+}
+
+.download-table-button:hover {
+  background-color: var(--secondary-color);
+}
+
+.page-actions {
+  padding: 0px;
+  justify-content: normal;
+}
+
+.propose-button {
+  background-color: var(--tertiary-color);
+  color: var(--text-color);
+  border: none;
+  padding: 8px 12px;
+  font-size: small;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 5px;
+}
+.propose-button:hover {
+  background-color: var(--secondary-color);
+}
+
+.modal {
+  max-width: 700px;
+}
+
+.block-container {
+  width: 90%;
+}
+
+.error-message {
+  color: red;
+  font-size: small;
+}

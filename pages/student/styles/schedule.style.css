@@ -1,0 +1,135 @@
+.container {
+  margin-top: 70px;
+  height: 90vh;
+  box-sizing: border-box;
+}
+
+.main-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.days-container {
+  width: 25%;
+  padding: 16px;
+  box-sizing: border-box;
+  border-right: 1px solid #ccc;
+  overflow-y: auto;
+  height: 100%;
+}
+
+.days-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.days-container::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 4px;
+}
+
+.days-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.days-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.days-container::-ms-scrollbar {
+  width: 6px;
+  background: transparent;
+}
+
+.days-container::-ms-scrollbar-track {
+  background: transparent;
+}
+
+.days-container::-ms-scrollbar-thumb {
+  background: #888;
+}
+
+.days-container button {
+  height: 50px;
+  width: 100%;
+  border: 1px solid var(--secondary-color);
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+
+.days-container button:last-child {
+  margin-bottom: 0;
+}
+
+.days-container button:hover {
+  background-color: var(--secondary-color);
+  color: white;
+}
+.days-container button.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.timetable-container {
+  width: 75%;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+table th:nth-child(1),
+table td:nth-child(1),
+table th:nth-child(4),
+table td:nth-child(4),
+table th:nth-child(5),
+table td:nth-child(5) {
+  width: 8%;
+}
+
+table th:nth-child(2),
+table td:nth-child(2) {
+  width: 15%;
+}
+
+table th:nth-child(3),
+table td:nth-child(3) {
+  width: 24%;
+  text-wrap: wrap;
+}
+
+table th:nth-child(6),
+table td:nth-child(6) {
+  text-wrap: wrap;
+}
+
+table td {
+  cursor: default;
+}
+
+.input-row {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.input-container.small-width {
+  flex: 0 0 20%;
+}
+.input-container input {
+  padding-right: 0px;
+  padding-left: 10px;
+}
+
+.timetable-card-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  height: 75vh;
+}
+
+@media (max-width: 768px) {
+  .days-container {
+    overflow-x: scroll;
+  }
+}

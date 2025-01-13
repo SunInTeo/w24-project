@@ -1,0 +1,166 @@
+button {
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Primary button */
+button.primary {
+  background-color: var(--primary-color);
+  color: var(--text-color);
+}
+button.primary:hover {
+  background-color: var(--secondary-color);
+}
+
+/* Secondary button */
+button.secondary {
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+}
+button.secondary:hover {
+  background-color: var(--tertiary-color);
+}
+
+/* Accent button */
+button.accent {
+  background-color: var(--accent-color);
+  color: var(--primary-color);
+}
+button.accent:hover {
+  background-color: var(--primary-color);
+  color: var(--text-color);
+}
+
+/* Disabled button */
+button.disabled {
+  background-color: var(--background-color);
+  color: var(--secondary-color);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Radio Button Component */
+.radio-container {
+  display: flex;
+  flex-direction: row; /* Stack radio buttons vertically */
+  gap: 10px;
+  margin-bottom: 20px; /* Adjust margin for spacing */
+}
+
+.radio-container label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: smaller;
+}
+
+.radio-option {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 15px;
+  height: 15px;
+  border: 1px solid var(--tertiary-color);
+  border-radius: 50%;
+  outline: none;
+  cursor: pointer;
+  background-color: transparent;
+  position: relative;
+  transition: all 0.3s ease;
+  margin: 0px;
+}
+
+.radio-option:checked {
+  background-color: var(--tertiary-color);
+  border-color: var(--primary-color);
+}
+
+.radio-option:checked::after {
+  content: "";
+  width: 7px;
+  height: 7px;
+  background-color: #fff;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.radio-container label:hover .radio-option {
+  border-color: var(--primary-color);
+}
+
+/*Language toggle*/
+.language-toggle {
+  position: fixed;
+  bottom: 30px;
+  left: 20px;
+  z-index: 1000;
+  display: inline-block;
+  width: 60px;
+  height: 30px;
+}
+
+.language-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-label {
+  position: relative;
+  display: block;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  background-color: var(--secondary-color);
+  border-radius: 15px;
+  transition: background-color 0.3s ease;
+}
+
+.toggle-label::before {
+  content: "";
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background-color: white;
+  border-radius: 50%;
+  top: 0;
+  left: 0;
+  transition: transform 0.3s ease;
+  transform: translateX(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-label .lang-en,
+.toggle-label .lang-bg {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
+  pointer-events: none;
+}
+
+.toggle-label .lang-en {
+  left: 10px;
+}
+
+.toggle-label .lang-bg {
+  right: 10px;
+}
+
+input:checked + .toggle-label {
+  background-color: var(--primary-color);
+}
+
+input:checked + .toggle-label::before {
+  transform: translateX(30px);
+}

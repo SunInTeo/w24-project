@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title data-i18n="card-project-topics"></title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../components/styles/main.css" />
+    <link rel="stylesheet" href="../../assets/styles/global.css" />
+    <link rel="stylesheet" href="./styles/settings.style.css" />
+  </head>
+  <body>
+    <nav class="nav"></nav>
+
+    <main>
+      <div class="centered-container">
+        <!-- Section for User Details -->
+        <div class="container-card">
+          <div class="user-details-section">
+            <h3 class="section-title" data-i18n="user-details"></h3>
+            <div class="user-details-content"></div>
+            <div class="input-container">
+              <i class="input-icon fa-solid fa-user"></i>
+              <input
+                type="text"
+                id="nameInput"
+                placeholder="Enter your name"
+                disabled
+              />
+            </div>
+            <div class="input-container">
+              <i class="input-icon fa-solid fa-envelope"></i>
+              <input
+                type="email"
+                id="emailInput"
+                placeholder="Enter your email"
+                disabled
+              />
+            </div>
+            <div class="input-container">
+              <i class="input-icon fa-solid fa-user"></i>
+              <input
+                type="text"
+                id="userName"
+                placeholder="Enter your name"
+                disabled
+              />
+            </div>
+            <div class="input-container">
+              <i class="input-icon fa-solid fa-user"></i>
+              <input
+                type="text"
+                id="facultyNumber"
+                placeholder="Enter your name"
+                disabled
+              />
+            </div>
+            <button
+              class="accent small change-pass-btn"
+              data-i18n="change-password"
+              onclick="openModal('change-pass-modal', 'change-pass-modal-overlay')"
+            ></button>
+          </div>
+
+          <div class="faq-section">
+            <div class="faq-header">
+              <h3 class="section-title" data-i18n="faq"></h3>
+            </div>
+            <div class="faq-content">
+              <div class="accordion"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <div
+      class="modal-overlay"
+      id="change-pass-modal-overlay"
+      style="display: none"
+    ></div>
+    <div class="modal" id="change-pass-modal" style="display: none">
+      <div class="modal-header">
+        Modal Title
+        <button
+          class="modal-close-button"
+          aria-label="Close modal"
+          onclick="closeModal('change-pass-modal', 'change-pass-modal-overlay')"
+        >
+          &times;
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="changePasswordForm">
+          <div class="input-container">
+            <i class="input-icon fa-solid fa-lock"></i>
+            <input
+              type="password"
+              id="oldPasswordInput"
+              data-i18n-placeholder="old-password"
+            />
+            <button
+              class="clear-button"
+              aria-label="Clear input"
+              title="Clear input"
+            >
+              &times;
+            </button>
+            <button
+              class="toggle-password"
+              aria-label="Toggle password visibility"
+              title="Toggle password visibility"
+            >
+              <i class="fa-solid fa-eye"></i>
+            </button>
+          </div>
+          <div class="input-container">
+            <i class="input-icon fa-solid fa-lock"></i>
+            <input
+              type="password"
+              id="passwordInput"
+              data-i18n-placeholder="new-password"
+            />
+            <button
+              class="clear-button"
+              aria-label="Clear input"
+              title="Clear input"
+            >
+              &times;
+            </button>
+            <button
+              class="toggle-password"
+              aria-label="Toggle password visibility"
+              title="Toggle password visibility"
+            >
+              <i class="fa-solid fa-eye"></i>
+            </button>
+          </div>
+          <div class="input-container">
+            <i class="input-icon fa-solid fa-lock"></i>
+            <input
+              type="password"
+              id="passwordInput"
+              data-i18n-placeholder="confirm-password"
+            />
+            <button
+              class="clear-button"
+              aria-label="Clear input"
+              title="Clear input"
+            >
+              &times;
+            </button>
+            <button
+              class="toggle-password"
+              aria-label="Toggle password visibility"
+              title="Toggle password visibility"
+            >
+              <i class="fa-solid fa-eye"></i>
+            </button>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="primary" data-i18n="save-changes"></button>
+        <button
+          class="secondary"
+          data-i18n="cancel-text"
+          onclick="closeModal('change-pass-modal', 'change-pass-modal-overlay')"
+        ></button>
+      </div>
+    </div>
+
+    <div class="language-toggle"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="../../localization/local.script.js"></script>
+    <script src="../../components/javascript/nav.script.js"></script>
+    <script src="../../components/javascript/input.script.js"></script>
+    <script src="../../components/javascript/modal.script.js"></script>
+    <script src="../../components/javascript/accordion.script.js"></script>
+    <script src="./javascript/settings.script.js"></script>
+  </body>
+</html>
