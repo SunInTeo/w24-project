@@ -35,12 +35,12 @@ class User
     }
 
     // Function to authenticate a user
-    public function login($email, $password)
+    public function login($username, $password)
     {
         try {
             // Retrieve the user from the database
-            $stmt = $this->pdo->prepare('SELECT * FROM users WHERE email = :email');
-            $stmt->execute([':email' => $email]);
+            $stmt = $this->pdo->prepare('SELECT * FROM users WHERE username = :username');
+            $stmt->execute([':username' => $username]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($user && password_verify($password, $user['password'])) {
