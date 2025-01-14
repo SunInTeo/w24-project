@@ -219,3 +219,34 @@ function downloadTableAsExcel(tableID) {
 
   XLSX.writeFile(workbook, "research_papers_table.xlsx");
 }
+
+document.getElementById('propose-topic-form').addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const proposedTopic = document.getElementById('proposedTopic').value.trim();
+  const proposeTopicText = document.getElementById('proposeTopicText').value.trim();
+
+  if (!proposedTopic || !proposeTopicText) {
+      alert('Please fill out all fields.');
+      return;
+  }
+
+  try {
+      const response = await fetch('./propose_topic.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ topic: proposedTopic, description: proposeTopicText }),
+      });
+
+      const data = await response.json();
+
+      if (data.status === 'success') {
+          alert('Topic proposed successfully!');
+          closeModal('propose-topic-modal', 'propose-topic-modal-overlay');
+          resetForm('propose-topic-form');
+      } else {
+          alert(data.message);
+      }
+  } catch (error) {
+      console.error('Error proposing topic:', error);
+  }
+});
