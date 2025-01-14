@@ -68,7 +68,11 @@
       </div>
 
       <div class="back-layer">
-        <form action="login.php" method="POST" class="login-form active">
+        <form
+          action="../../../backend/login.php"
+          method="POST"
+          class="login-form active"
+        >
           <h2 data-i18n="auth-login-title"></h2>
           <div class="input-container">
             <i class="input-icon fa-solid fa-user"></i>
@@ -115,13 +119,12 @@
           </div>
           <button
             type="button"
-            class="primary"
-            onclick="navigateToHome()"
+            class="primary login-button"
             data-i18n="auth-login"
           ></button>
         </form>
 
-        <form action="register.php" method="POST" class="signup-form">
+        <form class="signup-form">
           <h2 data-i18n="auth-signup-title"></h2>
           <div class="radio-container">
             <label>
@@ -149,6 +152,7 @@
             <i class="input-icon fa-solid fa-user"></i>
             <input
               type="text"
+              name="name"
               id="fullNameInput"
               placeholder="Enter your full name"
               data-i18n-placeholder="auth-placeholder-fullname"
@@ -165,6 +169,7 @@
             <i class="input-icon fa-solid fa-user"></i>
             <input
               type="email"
+              name="email"
               id="emailInputSignup"
               placeholder="Enter your email"
               data-i18n-placeholder="auth-placeholder-email"
@@ -182,6 +187,7 @@
             <input
               type="text"
               id="usernameInputSignup"
+              name="username"
               placeholder="Enter your username"
               data-i18n-placeholder="auth-placeholder-username"
             />
@@ -201,6 +207,7 @@
             <input
               type="text"
               id="facultyNumberInput"
+              name="facultyNumber"
               placeholder="Enter your faculty number"
               data-i18n-placeholder="auth-placeholder-facultynumber"
             />
@@ -217,6 +224,7 @@
             <i class="input-icon fa-solid fa-lock"></i>
             <input
               type="password"
+              name="password"
               id="passwordInputSignup"
               placeholder="Enter your password"
               data-i18n-placeholder="auth-placeholder-password"
@@ -262,7 +270,6 @@
           <button
             type="button"
             class="primary signup-button"
-            onclick="navigateToHome()"
             data-i18n="auth-signup"
           ></button>
         </form>

@@ -1,36 +1,52 @@
 <?php
-require 'db.php';
+require_once __DIR__ . '/classes/db.php'; 
+
+header('Content-Type: application/json'); 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $userType = $_POST['userType'];
-    $facultyNumber = $userType === 'student' ? $_POST['facultyNumber'] : null;
-    $name = trim($_POST['name']);
-    $username = trim($_POST['username']);
-    $email = trim($_POST['email']);
-    $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
+    $userType = $_POST['userType'] ?? null;
+    $facultyNumber = ($userType === 'student') ? ($_POST['facultyNumber'] ?? null) : null;
+    $name = trim($_POST['name'] ?? '');
+    $username = trim($_POST['username'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $password = $_POST['password'] ?? '';
 
-    // Check if username or email already exists
-    $stmt = $pdo->prepare("SELECT * FROM Users WHERE username = :username OR email = :email");
-    $stmt->execute(['username' => $username, 'email' => $email]);
-
-    if ($stmt->rowCount() > 0) {
-        die("Error: Username or Email already exists.");
+    if (empty($name) || empty($username) || empty($email) || empty($password) || ($userType === 'student' && empty($facultyNumber))) {
+        echo json_encode(['status' => 'error', 'message' => 'All fields are required.']);
+        http_response_code(400); 
+        exit;
     }
 
-    // Insert user into the database
-    $stmt = $pdo->prepare("
-        INSERT INTO Users (user_type, faculty_number, name, username, email, password)
-        VALUES (:userType, :facultyNumber, :name, :username, :email, :password)
-    ");
-    $stmt->execute([
-        'userType' => $userType,
-        'facultyNumber' => $facultyNumber,
-        'name' => $name,
-        'username' => $username,
-        'email' => $email,
-        'password' => $password,
-    ]);
+    $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
-    echo "Registration successful.";
+    try {
+        $stmt = $pdo->prepare("SELECT * FROM Users WHERE username = :username OR email = :email");
+        $stmt->execute(['username' => $username, 'email' => $email]);
+
+        if ($stmt->rowCount() > 0) {
+            echo json_encode(['status' => 'error', 'message' => 'Username or Email already exists.']);
+            http_response_code(409); 
+            exit;
+        }
+
+        $stmt = $pdo->prepare("
+            INSERT INTO Users (user_type, faculty_number, name, username, email, password)
+            VALUES (:userType, :facultyNumber, :name, :username, :email, :password)
+        ");
+        $stmt->execute([
+            'userType' => $userType,
+            'facultyNumber' => $facultyNumber,
+            'name' => $name,
+            'username' => $username,
+            'email' => $email,
+            'password' => $hashedPassword,
+        ]);
+
+        echo json_encode(['status' => 'success', 'message' => 'Registration successful.']);
+        http_response_code(200); 
+    } catch (PDOException $e) {
+        echo json_encode(['status' => 'error', 'message' => 'Database error: ' . $e->getMessage()]);
+        http_response_code(500); 
+    }
 }
 ?>
