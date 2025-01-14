@@ -18,7 +18,13 @@
     <main>
       <div class="container">
         <div class="main-container">
-          <div class="days-container block-container" id="days"></div>
+          <div class="days-container block-container" id="days">
+            <button
+              class="propose-button"
+              data-i18n="add-time-slot"
+              onclick="openAddToTimetableModal('add-timeslot-modal','add-timeslot-modal-overlay')"
+            ></button>
+          </div>
           <div class="timetable-container" id="timetable">
             <div class="timetable-card-container">
               <div class="card">
@@ -38,9 +44,9 @@
       id="add-timeslot-modal-overlay"
       style="display: none"
     ></div>
-    <div class="modal" id="add-timeslot-modal" style="display: none">
+    <div class="modal timeslot" id="add-timeslot-modal" style="display: none">
       <div class="modal-header">
-        <span data-i18n="adding-student-to-timetable"></span>
+        <span data-i18n="add-time-slot"></span>
         <button
           class="modal-close-button"
           aria-label="Close modal"
@@ -51,48 +57,28 @@
       </div>
       <div class="modal-body">
         <form id="add-timeslot-form">
-          <div class="select-container">
-            <select id="timetable-dropdown"></select>
-          </div>
-
           <div class="input-row">
-            <div class="input-container small-width">
-              <input
-                type="text"
-                id="facultyNumberInput"
-                data-i18n-placeholder="faculty-number-placeholder-team"
-              />
+            <div class="input-container">
+              <label for="dayInput" data-i18n="date"></label>
+              <input type="date" id="dayInput" />
             </div>
             <div class="input-container">
-              <input
-                type="text"
-                id="studentNameInput"
-                data-i18n-placeholder="student-name-placeholder-team"
-              />
+              <label for="dayInput" data-i18n="start-time"></label>
+              <input type="time" id="startTimeInput" />
             </div>
-            <div class="input-container small-width">
+          </div>
+          <div class="input-row">
+            <div class="input-container">
+              <label for="dayInput" data-i18n="delay"></label>
+              <input type="number" min="1" id="delayInput" />
+            </div>
+            <div class="input-container">
+              <label for="dayInput" data-i18n="end-time"></label>
+
               <input
-                type="text"
-                id="groupInput"
+                type="time"
+                id="endtimeInput"
                 data-i18n-placeholder="group"
-              />
-            </div>
-          </div>
-
-          <div class="input-row">
-            <div class="input-container small-width">
-              <input
-                type="text"
-                id="topicNumberInput"
-                data-i18n-placeholder="table-topic-number"
-              />
-            </div>
-
-            <div class="input-container">
-              <input
-                type="text"
-                id="topicNameInput"
-                data-i18n-placeholder="table-topic-name"
               />
             </div>
           </div>

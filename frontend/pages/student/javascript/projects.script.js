@@ -3,7 +3,6 @@ const sampleData = [
     topicNumber: 1,
     topicName: "AI in Healthcare",
     description: "Exploring AI's role in diagnostics and treatment.",
-    sampleDistribution: "Data collection, algorithm training, testing.",
     participant1: "Alice Johnson",
     participant2: "Bob Smith",
     participant3: "Charlie Brown",
@@ -14,7 +13,6 @@ const sampleData = [
     topicNumber: 2,
     topicName: "Blockchain for Supply Chain",
     description: "Enhancing transparency and efficiency in logistics.",
-    sampleDistribution: "Blockchain setup, integration, and testing.",
     participant1: "Daniel Craig",
     participant2: "Emily White",
     participant3: "Frank Green",
@@ -25,7 +23,6 @@ const sampleData = [
     topicNumber: 3,
     topicName: "IoT in Smart Cities",
     description: "Leveraging IoT for urban management.",
-    sampleDistribution: "Sensor installation, data aggregation.",
     participant1: "Grace Lee",
     participant2: "Henry Ford",
     participant3: "Ivy Adams",
@@ -36,7 +33,6 @@ const sampleData = [
     topicNumber: 4,
     topicName: "Cybersecurity in Cloud",
     description: "Exploring strategies for secure cloud computing.",
-    sampleDistribution: "Threat modeling, implementation, testing.",
     participant1: "Jack Davis",
     participant2: "Karen Taylor",
     participant3: "Liam Wilson",
@@ -48,7 +44,6 @@ const sampleData = [
     topicNumber: 5,
     topicName: "Augmented Reality in Education",
     description: "Using AR for immersive learning experiences.",
-    sampleDistribution: "Content creation, software development.",
     participant1: "Mia Brown",
     participant2: "Noah Evans",
     participant3: "Olivia Harris",
@@ -59,7 +54,6 @@ const sampleData = [
     topicNumber: 6,
     topicName: "Quantum Computing",
     description: "Introduction to quantum algorithms and applications.",
-    sampleDistribution: "Theory research, algorithm testing.",
     participant1: "Paul Walker",
     participant2: "Quincy Smith",
     participant3: "Rachel Adams",
@@ -70,7 +64,6 @@ const sampleData = [
     topicNumber: 7,
     topicName: "Sustainable Energy Solutions",
     description: "Analyzing renewable energy options.",
-    sampleDistribution: "Data analysis, prototyping.",
     participant1: "Sam Green",
     participant2: "Tina Brown",
     participant3: "Uma Lee",
@@ -81,7 +74,6 @@ const sampleData = [
     topicNumber: 8,
     topicName: "Natural Language Processing",
     description: "Advancing NLP for better human-machine interaction.",
-    sampleDistribution: "Dataset preparation, model training.",
     participant1: "Victor Black",
     participant2: "Wendy White",
     participant3: "Xander Gray",
@@ -115,7 +107,6 @@ document.addEventListener("DOMContentLoaded", () => {
       <td>${data.topicNumber}</td>
       <td>${data.topicName}</td>
       <td>${data.description}</td>
-      <td>${data.sampleDistribution}</td>
       <td>${data.participant1}</td>
       <td>${data.participant2}</td>
       <td>${data.participant3}</td>
@@ -197,9 +188,6 @@ function populateDrawer(data) {
     <p><strong data-i18n="table-topic-name"></strong> ${data.topicName}</p>
     <p><strong data-i18n="table-description"></strong>
       <textarea class="textarea-component" data-field="description" rows="4" disabled>${data.description}</textarea>
-    </p>
-    <p><strong data-i18n="table-sample-distribution"></strong>
-      <textarea class="textarea-component" data-field="sampleDistribution" rows="4" disabled>${data.sampleDistribution}</textarea>
     </p>
     <p><strong data-i18n="table-participant-1"></strong>
       <textarea class="textarea-component" data-field="participant1" rows="4" disabled>${data.participant1}</textarea>
