@@ -30,20 +30,12 @@ CREATE TABLE Projects (
     project_id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
-    participant_1 TEXT,
-    participant_2 TEXT,
-    participant_3 TEXT,
+    example_distribution TEXT,
     integration TEXT,
     requirements TEXT,
-    projects_of_students:[
-        {
-        team:[fn of students]
-        own_resources TEXT,
-        keywords JSON,
-        comments TEXT
-        }
-    ]
-    
+    own_resources TEXT,
+    keywords JSON,
+    comments TEXT
 );
 
 -- 4. Slot Table
@@ -52,18 +44,12 @@ CREATE TABLE Slot (
     date DATE NOT NULL,
     start_hour TIME NOT NULL,
     end_hour TIME NOT NULL,
-);
-
--- 5. SlotAssignments Table
-CREATE TABLE ScheduleTable (
-    table_id INT AUTO_INCREMENT PRIMARY KEY,
-    slot_id INT NOT NULL,
     user_id INT NOT NULL,
-    type ENUM('essay', 'project') NOT NULL,
-    assignment_id INT NOT NULL
+    essay_id INT,
+    project_id INT,
 );
 
--- 6. FAQ Table
+-- 5. FAQ Table
 CREATE TABLE FAQ (
     faq_id INT AUTO_INCREMENT PRIMARY KEY,
     question TEXT NOT NULL,
@@ -78,8 +64,7 @@ ALTER TABLE Users
 ALTER TABLE Essays
     ADD CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE;
 
-ALTER TABLE SlotAssignments
-    ADD CONSTRAINT fk_slot FOREIGN KEY (slot_id) REFERENCES Slot(slot_id) ON DELETE CASCADE,
+ALTER TABLE Slot
     ADD CONSTRAINT fk_user_slot FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE;
-    ADD CONSTRAINT fk_essay_assignment FOREIGN KEY (assignment_id) REFERENCES Essays(essay_id) ON DELETE CASCADE,
-    ADD CONSTRAINT fk_project_assignment FOREIGN KEY (assignment_id) REFERENCES Projects(project_id) ON DELETE CASCADE;
+    CONSTRAINT fk_essay_slot FOREIGN KEY (essay_id) REFERENCES Essays(essay_id) ON DELETE SET NULL,
+    CONSTRAINT fk_project_slot FOREIGN KEY (project_id) REFERENCES Projects(project_id) ON DELETE SET NULL;
