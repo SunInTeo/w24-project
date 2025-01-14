@@ -110,15 +110,29 @@ function handleCheckboxChange() {
 }
 
 function deleteSelectedRows() {
-  const checkboxes = document.querySelectorAll(".row-checkbox:checked");
-  checkboxes.forEach((checkbox) => {
-    const row = checkbox.closest("tr");
-    row.remove();
-  });
+  const selectedIds = Array.from(document.querySelectorAll(".row-checkbox:checked"))
+    .map((checkbox) => checkbox.dataset.id);
 
-  document.getElementById("delete-selected").disabled = true;
-  const selectAllCheckbox = document.querySelector("#select-all");
-  selectAllCheckbox.checked = false;
+  if (selectedIds.length > 0) {
+    fetch("delete_endpoint.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ids: selectedIds }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "success") {
+          selectedIds.forEach((id) => {
+            const row = document.querySelector(`.row-checkbox[data-id="${id}"]`).closest("tr");
+            row.remove();
+          });
+          document.getElementById("delete-selected").disabled = true;
+        } else {
+          alert("Failed to delete rows.");
+        }
+      })
+      .catch((error) => console.error("Error:", error));
+  }
 }
 
 function openPageDrawer(data) {
@@ -148,38 +162,38 @@ function populateDrawer(data) {
     </p>
     <p><strong data-i18n="table-sample-resources"></strong>
       <textarea class="textarea-component" data-field="sampleResources" rows="5">${formatText(
-        data.sampleResources
-      )}</textarea>
+    data.sampleResources
+  )}</textarea>
     </p>
     <p><strong data-i18n="table-your-resources"></strong>
       <textarea class="textarea-component" data-field="yourResources" rows="5">${formatText(
-        data.yourResources
-      )}</textarea>
+    data.yourResources
+  )}</textarea>
     </p>
     <p><strong data-i18n="table-presentation-content"></strong>
       <textarea class="textarea-component" data-field="presentationContent" rows="5">${formatText(
-        data.presentationContent
-      )}</textarea>
+    data.presentationContent
+  )}</textarea>
     </p>
     <p><strong data-i18n="table-sample-content"></strong>
       <textarea class="textarea-component" data-field="sampleContent" rows="5">${formatText(
-        data.sampleContent
-      )}</textarea>
+    data.sampleContent
+  )}</textarea>
     </p>
     <p><strong data-i18n="table-presentation-resume"></strong>
       <textarea class="textarea-component" data-field="presentationResume" rows="5">${formatText(
-        data.presentationResume
-      )}</textarea>
+    data.presentationResume
+  )}</textarea>
     </p>
     <p><strong data-i18n="table-keywords"></strong>
       <textarea class="textarea-component" data-field="keywords" rows="3">${formatText(
-        data.keywords
-      )}</textarea>
+    data.keywords
+  )}</textarea>
     </p>
     <p><strong data-i18n="table-non-formal"></strong>
       <textarea class="textarea-component" data-field="nonFormal" rows="3">${formatText(
-        data.nonFormal
-      )}</textarea>
+    data.nonFormal
+  )}</textarea>
     </p>
     <div class="flex-container">
       <button class="save-drawer-button" onclick="saveDrawer()" data-i18n="send-text"></button>
@@ -189,3 +203,60 @@ function populateDrawer(data) {
 
   applyTranslations();
 }
+
+async function addTopic(event) {
+  event.preventDefault();
+  const formData = new FormData(document.getElementById("add-topic-form"));
+
+  try {
+    const response = await fetch("./research_papers.php", {
+      method: "POST",
+      body: formData,
+    });
+    const data = await response.json();
+
+    if (data.status === "success") {
+      alert("Topic added successfully!");
+      fetchResearchPapers(); // Refresh the table
+      closeModal("add-topic-modal", "add-topic-modal-overlay");
+    } else {
+      alert(data.message);
+    }
+  } catch (error) {
+    console.error("Error adding topic:", error);
+  }
+}
+
+async function fetchResearchPapers() {
+  try {
+    const response = await fetch("./research_papers.php");
+    const data = await response.json();
+
+    if (data.status === "success") {
+      const tbody = document.querySelector("#research_papers tbody");
+      tbody.innerHTML = "";
+      data.data.forEach((paper) => {
+        const row = `
+          <tr>
+            <td><input type="checkbox" /></td>
+            <td>${paper.essay_id}</td>
+            <td>${paper.title}</td>
+            <td>${paper.resources}</td>
+            <td>${paper.own_resources}</td>
+            <td>${paper.content_of_presentation}</td>
+            <td>${paper.content_of_examples}</td>
+            <td>${paper.resume_of_presentation}</td>
+            <td>${JSON.parse(paper.keywords).join(", ")}</td>
+          </tr>
+        `;
+        tbody.insertAdjacentHTML("beforeend", row);
+      });
+    } else {
+      console.error(data.message);
+    }
+  } catch (error) {
+    console.error("Error fetching research papers:", error);
+  }
+}
+
+fetchResearchPapers();
