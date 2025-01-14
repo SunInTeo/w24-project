@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (clearButton) {
       clearButton.addEventListener("click", () => {
+        event.preventDefault();
         input.value = "";
         input.focus();
       });
@@ -15,6 +16,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (toggleButton) {
       toggleButton.addEventListener("click", () => {
+        event.preventDefault();
+
         const isPassword = input.getAttribute("type") === "password";
         input.setAttribute("type", isPassword ? "text" : "password");
         toggleButton.innerHTML = isPassword

@@ -1,7 +1,7 @@
 <?php
-require_once __DIR__ . '/classes/db.php'; 
+require_once __DIR__ . '/classes/db.php';
 
-header('Content-Type: application/json'); 
+header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $userType = $_POST['userType'] ?? null;
@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($name) || empty($username) || empty($email) || empty($password) || ($userType === 'student' && empty($facultyNumber))) {
         echo json_encode(['status' => 'error', 'message' => 'All fields are required.']);
-        http_response_code(400); 
+        http_response_code(400);
         exit;
     }
 
@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($stmt->rowCount() > 0) {
             echo json_encode(['status' => 'error', 'message' => 'Username or Email already exists.']);
-            http_response_code(409); 
+            http_response_code(409);
             exit;
         }
 
@@ -42,11 +42,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'password' => $hashedPassword,
         ]);
 
-        echo json_encode(['status' => 'success', 'message' => 'Registration successful.']);
-        http_response_code(200); 
+        $userId = $pdo->lastInsertId();
+
+        echo json_encode([
+            'status' => 'success',
+            'message' => 'Registration successful.',
+            'user' => [
+                'user_id' => $userId,
+                'username' => $username,
+                'user_type' => $userType,
+            ]
+        ]);
+        http_response_code(200);
     } catch (PDOException $e) {
         echo json_encode(['status' => 'error', 'message' => 'Database error: ' . $e->getMessage()]);
-        http_response_code(500); 
+        http_response_code(500);
     }
+} else {
+    echo json_encode(['status' => 'error', 'message' => 'Invalid request method.']);
+    http_response_code(405);
 }
 ?>

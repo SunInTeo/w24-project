@@ -95,7 +95,7 @@ document
       if (contentType && contentType.includes("application/json")) {
         const result = await response.json();
         if (response.ok) {
-          alert(result.message || "Registration successful!");
+          setUserInLocalStorage(result);
           window.location.href = "/w24-project/frontend/pages/global/home.html";
         } else {
           alert(result.message || "Registration failed.");
@@ -137,7 +137,11 @@ document
       const contentType = response.headers.get("Content-Type");
       if (contentType && contentType.includes("application/json")) {
         const result = await response.json();
+        console.log(result);
+        console.log(response);
+
         if (response.ok) {
+          setUserInLocalStorage(result);
           window.location.href = "/w24-project/frontend/pages/global/home.html";
         } else {
           alert(result.message || "Login failed.");
@@ -152,3 +156,11 @@ document
       alert("An error occurred while logging in. Please try again later.");
     }
   });
+
+function setUserInLocalStorage(result) {
+  if (result.user) {
+    localStorage.setItem("user_type", result.user.user_type);
+    localStorage.setItem("user_id", result.user.user_id);
+    localStorage.setItem("username", result.user.username);
+  }
+}

@@ -1,35 +1,31 @@
-function navigateToHome() {
-  window.location.href = `../global/home.html`;
-}
+(function () {
 
-const nav = document.querySelector(".nav");
-if (nav) {
-  nav.innerHTML = `
-    <div class="left" data-i18n="nav-brand"></div>
-    <div class="center" data-i18n="nav-welcome"></div>
-    <div class="right">
-      <button class="logout-button" data-i18n="nav-logout" onclick="handleLogout()"></button>
-    </div>
-  `;
 
-  applyTranslations();
-  const leftElement = nav.querySelector(".left");
-  const logoutButton = nav.querySelector(".logout-button");
-
-  if (leftElement) {
-    leftElement.addEventListener("click", navigateToHome);
+  function isPageExists(path) {
+    try {
+      const http = new XMLHttpRequest();
+      http.open("HEAD", path, false);
+      http.send();
+      return http.status !== 404;
+    } catch (e) {
+      return false;
+    }
   }
 
-  if (logoutButton) {
-    logoutButton.addEventListener("click", handleLogout);
-  }
-}
 
-function handleLogout() {
-  console.log("Logging out...");
-  window.location.href = `../global/auth.html`;
-}
-function navigateTo(location) {
-  window.location.href = `../student/${location}.html`;
-  //otherwhise admin
-}
+  function checkAuthenticationAndNavigate() {
+    const username = localStorage.getItem("username");
+    if (!username) {
+      window.location.href = "../global/auth.html";
+      return;
+    }
+
+    const currentPath = window.location.pathname;
+    const isValidPage = isPageExists(currentPath);
+    if (!isValidPage) {
+      navigateToHome();
+    }
+  }
+
+  checkAuthenticationAndNavigate();
+})();
