@@ -4,7 +4,6 @@ require_once __DIR__ . '/classes/db.php';
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    // Fetch all research papers for the table
     try {
         $stmt = $pdo->query("SELECT * FROM Essays");
         $essays = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -14,14 +13,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         http_response_code(500);
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Add a new topic
     $title = trim($_POST['title'] ?? '');
     $resources = trim($_POST['resources'] ?? '');
     $own_resources = trim($_POST['own_resources'] ?? '');
     $content_of_presentation = trim($_POST['content_of_presentation'] ?? '');
     $content_of_examples = trim($_POST['content_of_examples'] ?? '');
     $resume_of_presentation = trim($_POST['resume_of_presentation'] ?? '');
-    $keywords = $_POST['keywords'] ?? '[]'; // Expecting JSON string
+    $keywords = $_POST['keywords'] ?? '[]';
     $user_id = intval($_POST['user_id'] ?? 0);
 
     if (empty($title) || empty($resources) || empty($user_id)) {

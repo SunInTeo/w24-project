@@ -12,7 +12,6 @@ if (empty($topic) || empty($description)) {
     exit;
 }
 
-// Insert the proposed topic into the database
 try {
     $stmt = $pdo->prepare("INSERT INTO proposed_topics (topic, description, created_at) VALUES (:topic, :description, NOW())");
     $stmt->execute([':topic' => $topic, ':description' => $description]);
