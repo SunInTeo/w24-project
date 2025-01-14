@@ -65,6 +65,6 @@ ALTER TABLE Essays
     ADD CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE;
 
 ALTER TABLE Slot
-    ADD CONSTRAINT fk_user_slot FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE;
-    CONSTRAINT fk_essay_slot FOREIGN KEY (essay_id) REFERENCES Essays(essay_id) ON DELETE SET NULL,
-    CONSTRAINT fk_project_slot FOREIGN KEY (project_id) REFERENCES Projects(project_id) ON DELETE SET NULL;
+    ADD CONSTRAINT fk_user_slot FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+    ADD CONSTRAINT fk_essay_slot FOREIGN KEY (essay_id) REFERENCES Essays(essay_id) ON DELETE SET NULL,
+    ADD CONSTRAINT fk_project_slot FOREIGN KEY (project_id) REFERENCES Projects(project_id) ON DELETE SET NULL;
