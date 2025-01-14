@@ -21,3 +21,10 @@ function handleLogout() {
   localStorage.clear();
   window.location.href = "../global/auth.html";
 }
+
+function navigateTo(location) {
+  const user_type = localStorage.getItem("user_type");
+  if (user_type) {
+    window.location.href = `../${user_type}/${location}.html`;
+  }
+}
