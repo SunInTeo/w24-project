@@ -46,7 +46,7 @@ CREATE TABLE Slot (
     end_hour TIME NOT NULL,
     user_id INT NOT NULL,
     essay_id INT,
-    project_id INT,
+    project_id INT
 );
 
 -- 5. FAQ Table
