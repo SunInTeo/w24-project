@@ -17,6 +17,9 @@ CREATE TABLE Essays (
     title VARCHAR(255) NOT NULL,
     resources TEXT,
     own_resources TEXT,
+    content_of_presentation TEXT,
+    content_of_examples TEXT,
+    resume_of_presentation TEXT,
     keywords JSON,
     comments TEXT,
     user_id INT NOT NULL
@@ -27,10 +30,20 @@ CREATE TABLE Projects (
     project_id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
-    resources TEXT,
-    own_resources TEXT,
-    keywords JSON,
-    comments TEXT
+    participant_1 TEXT,
+    participant_2 TEXT,
+    participant_3 TEXT,
+    integration TEXT,
+    requirements TEXT,
+    projects_of_students:[
+        {
+        team:[fn of students]
+        own_resources TEXT,
+        keywords JSON,
+        comments TEXT
+        }
+    ]
+    
 );
 
 -- 4. Slot Table
@@ -38,16 +51,16 @@ CREATE TABLE Slot (
     slot_id INT AUTO_INCREMENT PRIMARY KEY,
     date DATE NOT NULL,
     start_hour TIME NOT NULL,
-    end_hour TIME NOT NULL
+    end_hour TIME NOT NULL,
 );
 
 -- 5. SlotAssignments Table
-CREATE TABLE SlotAssignments (
-    assignment_id INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE ScheduleTable (
+    table_id INT AUTO_INCREMENT PRIMARY KEY,
     slot_id INT NOT NULL,
     user_id INT NOT NULL,
     type ENUM('essay', 'project') NOT NULL,
-    item_id INT NOT NULL
+    assignment_id INT NOT NULL
 );
 
 -- 6. FAQ Table
@@ -68,5 +81,5 @@ ALTER TABLE Essays
 ALTER TABLE SlotAssignments
     ADD CONSTRAINT fk_slot FOREIGN KEY (slot_id) REFERENCES Slot(slot_id) ON DELETE CASCADE,
     ADD CONSTRAINT fk_user_slot FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE;
-    ADD CONSTRAINT fk_essay_assignment FOREIGN KEY (item_id) REFERENCES Essays(essay_id) ON DELETE CASCADE,
-    ADD CONSTRAINT fk_project_assignment FOREIGN KEY (item_id) REFERENCES Projects(project_id) ON DELETE CASCADE;
+    ADD CONSTRAINT fk_essay_assignment FOREIGN KEY (assignment_id) REFERENCES Essays(essay_id) ON DELETE CASCADE,
+    ADD CONSTRAINT fk_project_assignment FOREIGN KEY (assignment_id) REFERENCES Projects(project_id) ON DELETE CASCADE;
