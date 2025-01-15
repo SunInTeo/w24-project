@@ -27,3 +27,7 @@
   padding: 16px;
   text-align: right;
 }
+
+.card.no-data-card {
+  margin: 0px !important;
+}

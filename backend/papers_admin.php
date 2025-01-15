@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $content_of_presentation = trim($_POST['content_of_presentation'] ?? '');
     $content_of_examples = trim($_POST['content_of_examples'] ?? '');
     $resume_of_presentation = trim($_POST['resume_of_presentation'] ?? '');
-    $keywords = $_POST['keywords'] ?? '[]';
+    $keywords = $_POST['keywords'] ?? '';
     $user_id = intval($_POST['user_id'] ?? 0);
 
     if (empty($title) || empty($resources) || empty($user_id)) {
@@ -50,7 +50,77 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         echo json_encode(['status' => 'error', 'message' => 'Database error: ' . $e->getMessage()]);
         http_response_code(500);
     }
-} else {
+} elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    $input = json_decode(file_get_contents("php://input"), true);
+    $essayIds = $input['ids'] ?? [];
+
+    if (empty($essayIds) || !is_array($essayIds)) {
+        echo json_encode(['status' => 'error', 'message' => 'No valid IDs provided for deletion.']);
+        http_response_code(400);
+        exit;
+    }
+
+    try {
+        $placeholders = implode(',', array_fill(0, count($essayIds), '?'));
+        $stmt = $pdo->prepare("DELETE FROM Essays WHERE essay_id IN ($placeholders)");
+        $stmt->execute($essayIds);
+
+        echo json_encode(['status' => 'success', 'message' => 'Essays deleted successfully.']);
+        http_response_code(200);
+    } catch (PDOException $e) {
+        echo json_encode(['status' => 'error', 'message' => 'Database error: ' . $e->getMessage()]);
+        http_response_code(500);
+    }
+}elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+    $input = json_decode(file_get_contents("php://input"), true);
+    $essay_id = intval($input['essay_id'] ?? 0);
+    $title = trim($input['title'] ?? '');
+    $resources = trim($input['resources'] ?? '');
+    $own_resources = trim($input['own_resources'] ?? '');
+    $content_of_presentation = trim($input['content_of_presentation'] ?? '');
+    $content_of_examples = trim($input['content_of_examples'] ?? '');
+    $resume_of_presentation = trim($input['resume_of_presentation'] ?? '');
+    $keywords = $input['keywords'] ?? '';
+    $comments = trim($input['comments'] ?? '');
+
+    if (empty($essay_id) || empty($title)) {
+        echo json_encode(['status' => 'error', 'message' => 'Essay ID and title are required.']);
+        http_response_code(400);
+        exit;
+    }
+
+    try {
+        $stmt = $pdo->prepare("
+            UPDATE Essays
+            SET title = :title,
+                resources = :resources,
+                own_resources = :own_resources,
+                content_of_presentation = :content_of_presentation,
+                content_of_examples = :content_of_examples,
+                resume_of_presentation = :resume_of_presentation,
+                keywords = :keywords,
+                comments = :comments
+            WHERE essay_id = :essay_id
+        ");
+        $stmt->execute([
+            'essay_id' => $essay_id,
+            'title' => $title,
+            'resources' => $resources,
+            'own_resources' => $own_resources,
+            'content_of_presentation' => $content_of_presentation,
+            'content_of_examples' => $content_of_examples,
+            'resume_of_presentation' => $resume_of_presentation,
+            'keywords' => $keywords,
+            'comments' => $comments,
+        ]);
+
+        echo json_encode(['status' => 'success', 'message' => 'Essay updated successfully.']);
+        http_response_code(200);
+    } catch (PDOException $e) {
+        echo json_encode(['status' => 'error', 'message' => 'Database error: ' . $e->getMessage()]);
+        http_response_code(500);
+    }
+}else {
     echo json_encode(['status' => 'error', 'message' => 'Invalid request method.']);
     http_response_code(405);
 }

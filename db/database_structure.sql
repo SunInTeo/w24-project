@@ -20,7 +20,7 @@ CREATE TABLE Essays (
     content_of_presentation TEXT,
     content_of_examples TEXT,
     resume_of_presentation TEXT,
-    keywords JSON,
+    keywords TEXT,
     comments TEXT,
     user_id INT NOT NULL
 );
@@ -34,7 +34,7 @@ CREATE TABLE Projects (
     integration TEXT,
     requirements TEXT,
     own_resources TEXT,
-    keywords JSON,
+    keywords TEXT,
     comments TEXT
 );
 

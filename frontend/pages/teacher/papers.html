@@ -31,7 +31,6 @@
           <button
             id="delete-selected"
             class="delete-button small"
-            onclick="deleteSelectedRows()"
             disabled
             data-i18n="delete-selected"
           ></button>
@@ -57,7 +56,6 @@
             <tbody></tbody>
           </table>
         </div>
-
         <div
           class="drawer-overlay"
           id="drawerOverlay"
@@ -92,7 +90,7 @@
             <button
               class="modal-close-button"
               aria-label="Close modal"
-              onclick="closeModal('add-topic-modal','add-topic-modal-overlay')"
+              onclick="closeModal('add-topic-modal','add-topic-modal-overlay');resetForm('add-topic-form')"
             >
               &times;
             </button>
@@ -104,6 +102,7 @@
                   <i class="input-icon fa-solid fa-a"></i>
                   <input
                     type="text"
+                    name="topic"
                     id="addedTopic"
                     data-i18n-placeholder="add-topic-name"
                   />
@@ -117,6 +116,7 @@
                 </div>
                 <textarea
                   class="textarea-component"
+                  name="resources"
                   id="sampleResourcesTopicText"
                   data-i18n-placeholder="sample-resources-textarea"
                   rows="7"
@@ -126,7 +126,11 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button class="primary" data-i18n="send-text"></button>
+            <button
+              class="primary"
+              data-i18n="send-text"
+              onclick="addTopic(event)"
+            ></button>
             <button
               class="secondary"
               onclick="closeModal('add-topic-modal','add-topic-modal-overlay');resetForm('add-topic-form')"

@@ -115,6 +115,7 @@ const languages = {
     question: "Question",
     answer: "Answer",
     "add-faq": "Add FAQ",
+    "no-data-available": "No data available",
   },
   bg: {
     "auth-title": "Автентикация",
@@ -231,6 +232,7 @@ const languages = {
     question: "Въпрос",
     answer: "Отговор",
     "add-faq": "Добави ЧЗВ",
+    "no-data-available": "В момента няма данни.",
   },
 };
 
