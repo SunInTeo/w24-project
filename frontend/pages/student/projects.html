@@ -32,6 +32,9 @@
           ></button>
         </div>
 
+        <div class="spinner-container" id="spinner" style="display: none">
+          <span class="loader"></span>
+        </div>
         <div class="table-container">
           <table class="table" id="project_topics">
             <thead>
@@ -222,7 +225,11 @@
           id="edit-team-modal-overlay"
           style="display: none"
         ></div>
-        <div class="modal" id="edit-team-modal" style="display: none">
+        <div
+          class="modal"
+          id="edit-team-modal"
+          style="display: none; width: 400px"
+        >
           <div class="modal-header">
             <span data-i18n="edit-team"></span>
             <button
@@ -302,6 +309,35 @@
           </div>
         </div>
       </article>
+    </section>
+
+    <section>
+      <div
+        class="modal-overlay"
+        id="error-modal-overlay"
+        style="display: none"
+      ></div>
+      <div class="modal" id="error-modal" style="display: none">
+        <div class="modal-header">
+          <span data-i18n="oops"></span>
+          <button
+            class="modal-close-button"
+            aria-label="Close modal"
+            onclick="closeModal('error-modal', 'error-modal-overlay')"
+          >
+            &times;
+          </button>
+        </div>
+        <div class="modal-body"></div>
+        <div class="modal-footer">
+          <button
+            class="secondary"
+            onclick="closeModal('error-modal','error-modal-overlay')"
+          >
+            Ok
+          </button>
+        </div>
+      </div>
     </section>
 
     <div class="language-toggle"></div>

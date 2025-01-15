@@ -34,10 +34,19 @@
           <button
             class="propose-button"
             data-i18n="search-project"
-            onclick="openModal('search-modal','search-modal-overlay')"
+            onclick="openModal('search-modal','search-modal-overlay');populateTopicDropdown('topic-dropdown')"
+          ></button>
+          <button
+            id="delete-selected"
+            class="delete-button small"
+            disabled
+            data-i18n="delete-selected"
           ></button>
         </div>
 
+        <div class="spinner-container" id="spinner" style="display: none">
+          <span class="loader"></span>
+        </div>
         <div class="table-container">
           <table class="table" id="project_topics">
             <thead>
@@ -123,10 +132,15 @@
                   required
                 ></textarea>
               </form>
+              <div class="error-message"></div>
             </div>
           </div>
           <div class="modal-footer">
-            <button class="primary" data-i18n="send-text"></button>
+            <button
+              class="primary"
+              data-i18n="send-text"
+              onclick="createNewProject()"
+            ></button>
             <button
               class="secondary"
               onclick="closeModal('add-topic-modal','add-topic-modal-overlay');resetForm('add-topic-form')"
@@ -136,6 +150,7 @@
         </div>
       </article>
     </section>
+
     <section>
       <article>
         <div
@@ -163,11 +178,14 @@
                 <select id="topic-dropdown"></select>
               </div>
             </div>
+            <div id="teams-container">
+              <div id="teams" style="display: none"></div>
+            </div>
           </div>
           <div class="modal-footer">
             <button
               class="primary"
-              onclick="selectTopic()"
+              onclick="searchByProject()"
               data-i18n="select-text"
             >
               Select
@@ -182,6 +200,35 @@
       </article>
     </section>
 
+    <section>
+      <div
+        class="modal-overlay"
+        id="error-modal-overlay"
+        style="display: none"
+      ></div>
+      <div class="modal" id="error-modal" style="display: none">
+        <div class="modal-header">
+          <span data-i18n="oops"></span>
+          <button
+            class="modal-close-button"
+            aria-label="Close modal"
+            onclick="closeModal('error-modal', 'error-modal-overlay')"
+          >
+            &times;
+          </button>
+        </div>
+        <div class="modal-body"></div>
+        <div class="modal-footer">
+          <button
+            class="secondary"
+            onclick="closeModal('error-modal','error-modal-overlay')"
+          >
+            Ok
+          </button>
+        </div>
+      </div>
+    </section>
+
     <div class="language-toggle"></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -191,6 +238,7 @@
     <script src="../../components/javascript/input.script.js"></script>
     <script src="../../components/javascript/modal.script.js"></script>
     <script src="../../components/javascript/drawer.script.js"></script>
+    <script src="../../components/javascript/accordion.script.js"></script>
     <script src="./javascript/projects.script.js"></script>
   </body>
 </html>

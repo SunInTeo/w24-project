@@ -96,3 +96,8 @@
 .comments-container {
   margin-top: 15px;
 }
+
+#teams {
+  height: 150px;
+  overflow-y: scroll;
+}

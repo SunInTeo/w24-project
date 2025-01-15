@@ -3,9 +3,9 @@ const overlay = document.getElementById("drawerOverlay");
 const drawerHeader = document.querySelector(".drawer-header");
 const drawerContent = document.querySelector(".drawer-content");
 document.addEventListener("DOMContentLoaded", () => {
+  fetchResearchPapers("papers_admin");
   initializeTable();
   initializeEventListeners();
-  fetchResearchPapers("papers_admin");
 });
 
 function initializeEventListeners() {

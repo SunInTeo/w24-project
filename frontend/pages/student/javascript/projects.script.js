@@ -1,87 +1,3 @@
-const sampleData = [
-  {
-    topicNumber: 1,
-    topicName: "AI in Healthcare",
-    description: "Exploring AI's role in diagnostics and treatment.",
-    participant1: "Alice Johnson",
-    participant2: "Bob Smith",
-    participant3: "Charlie Brown",
-    integration: "Collaboration with bioinformatics team.",
-    requirements: "HIPAA compliance, scalability, accuracy benchmarks.",
-  },
-  {
-    topicNumber: 2,
-    topicName: "Blockchain for Supply Chain",
-    description: "Enhancing transparency and efficiency in logistics.",
-    participant1: "Daniel Craig",
-    participant2: "Emily White",
-    participant3: "Frank Green",
-    integration: "Works well with inventory management systems.",
-    requirements: "Network reliability, transaction speed.",
-  },
-  {
-    topicNumber: 3,
-    topicName: "IoT in Smart Cities",
-    description: "Leveraging IoT for urban management.",
-    participant1: "Grace Lee",
-    participant2: "Henry Ford",
-    participant3: "Ivy Adams",
-    integration: "Potential for integration with traffic systems.",
-    requirements: "Real-time data, low latency.",
-  },
-  {
-    topicNumber: 4,
-    topicName: "Cybersecurity in Cloud",
-    description: "Exploring strategies for secure cloud computing.",
-    participant1: "Jack Davis",
-    participant2: "Karen Taylor",
-    participant3: "Liam Wilson",
-    integration: "Collaboration with DevSecOps team.",
-    requirements: "Encryption, multi-factor authentication.",
-    comments: "Critical area for most businesses.",
-  },
-  {
-    topicNumber: 5,
-    topicName: "Augmented Reality in Education",
-    description: "Using AR for immersive learning experiences.",
-    participant1: "Mia Brown",
-    participant2: "Noah Evans",
-    participant3: "Olivia Harris",
-    integration: "Could be paired with VR projects.",
-    requirements: "High-performance hardware, intuitive UI.",
-  },
-  {
-    topicNumber: 6,
-    topicName: "Quantum Computing",
-    description: "Introduction to quantum algorithms and applications.",
-    participant1: "Paul Walker",
-    participant2: "Quincy Smith",
-    participant3: "Rachel Adams",
-    integration: "Collaborate with cryptography teams.",
-    requirements: "Access to quantum simulators.",
-  },
-  {
-    topicNumber: 7,
-    topicName: "Sustainable Energy Solutions",
-    description: "Analyzing renewable energy options.",
-    participant1: "Sam Green",
-    participant2: "Tina Brown",
-    participant3: "Uma Lee",
-    integration: "Integration with grid systems.",
-    requirements: "Feasibility analysis, government compliance.",
-  },
-  {
-    topicNumber: 8,
-    topicName: "Natural Language Processing",
-    description: "Advancing NLP for better human-machine interaction.",
-    participant1: "Victor Black",
-    participant2: "Wendy White",
-    participant3: "Xander Gray",
-    integration: "Application in customer service systems.",
-    requirements: "Labeled datasets, high computational resources.",
-  },
-];
-
 const drawer = document.getElementById("drawer");
 const overlay = document.getElementById("drawerOverlay");
 const drawerHeader = document.querySelector(".drawer-header");
@@ -92,42 +8,98 @@ const editTeamButton = document.querySelector(".edit-team-button");
 const pageActionsContainer = document.getElementById("page-actions");
 
 function setUserInLocalStorage(key, value) {
-  localStorage.setItem(key, JSON.stringify(value));
-  if (key === "project") {
-    const isProjectStored = Boolean(value);
+  if (key === "project" && value.topicNumber) {
+    // Spread team details directly into the project
+    const flattenedValue = { topicNumber: value.topicNumber, ...value };
+    localStorage.setItem(key, JSON.stringify(flattenedValue));
+    const isProjectStored = Boolean(flattenedValue);
     createActionButtons(isProjectStored, pageActionsContainer);
+  } else {
+    localStorage.setItem(key, JSON.stringify(value));
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  const tableBody = document.querySelector("#project_topics tbody");
-  sampleData.forEach((data) => {
+async function fetchProjects() {
+  try {
+    const response = await fetch("/w24-project/backend/projects_student.php", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    const data = await response.json();
+    if (data.status === "success") {
+      const projectTopics = data.data.map((project) => ({
+        projectId: project.project_id,
+        projectTitle: project.title,
+      }));
+      localStorage.setItem("project_topics", JSON.stringify(projectTopics));
+      renderProjects(data.data);
+    } else {
+      console.error("Error:", data.message);
+    }
+  } catch (error) {
+    console.error("Error fetching projects:", error);
+  }
+}
+function renderProjects(projects) {
+  const table = document.querySelector("#project_topics");
+  if (!table) {
+    console.error("Table with ID 'project_topics' not found.");
+    return;
+  }
+
+  let tbody = table.querySelector("tbody");
+  if (!tbody) {
+    console.error("The <tbody> element does not exist.");
+    tbody = document.createElement("tbody");
+    table.appendChild(tbody);
+  }
+  if (!projects.length) {
+    document.querySelector(".table-container").innerHTML = `
+      <div class="card no-data-card">
+        <div class="card-header" data-i18n="no-data-available">No Data Available</div>
+        <div class="card-body">
+          No research papers are available at the moment. Please add new topics to display them here.
+        </div>
+      </div>`;
+    applyTranslations();
+    return;
+  }
+
+  tbody.innerHTML = "";
+
+  projects.forEach((project) => {
     const row = document.createElement("tr");
     row.innerHTML = `
-      <td>${data.topicNumber}</td>
-      <td>${data.topicName}</td>
-      <td>${data.description}</td>
-      <td>${data.participant1}</td>
-      <td>${data.participant2}</td>
-      <td>${data.participant3}</td>
-      <td>${data.integration}</td>
-      <td>${data.requirements}</td>
+
+      <td>${project.project_id}</td>
+      <td>${project.title}</td>
+      <td>${project.description}</td>
+      <td>${project.example_distribution_1 || "-"}</td>
+      <td>${project.example_distribution_2 || "-"}</td>
+      <td>${project.example_distribution_3 || "-"}</td>
+      <td>${project.integration || "-"}</td>
+      <td>${project.requirements || "-"}</td>
     `;
-    row.addEventListener("click", () => openReviewDrawer(data));
-    tableBody.appendChild(row);
+
+    row.addEventListener("click", (event) => {
+      if (event.target.type === "checkbox") return;
+      openReviewDrawer(project);
+    });
+
+    tbody.appendChild(row);
   });
-  populateTopicDropdown("topic-dropdown");
-  hideErrorMessage();
-});
+}
 
 document.addEventListener("DOMContentLoaded", () => {
   const isProjectStored = Boolean(localStorage.getItem("project"));
   createActionButtons(isProjectStored, pageActionsContainer);
+  fetchProjects();
+  fetchUserTeam();
 });
 
 window.addEventListener("storage", (event) => {
   if (event.key === "project") {
-    console.log("Storage change detected:", event);
     const isProjectStored = Boolean(localStorage.getItem("project"));
     createActionButtons(isProjectStored, pageActionsContainer);
   }
@@ -149,8 +121,7 @@ function createActionButtons(isProjectStored, container) {
     const registerTeamButton = document.createElement("button");
     registerTeamButton.classList.add("register-team-button");
     registerTeamButton.setAttribute("data-i18n", "register-team");
-    registerTeamButton.onclick = () =>
-      openModal("register-team-modal", "register-team-modal-overlay");
+    registerTeamButton.onclick = () => openRegisterTeamModal();
     container.appendChild(registerTeamButton);
   }
 
@@ -180,41 +151,59 @@ function openReviewDrawer(data) {
 }
 
 function populateDrawer(data) {
+  const formatText = (text) => {
+    if (!text || text === "-") return "";
+    return text.replace(/(\d+\.+\D)/g, "\n$1").replace(/(\[\d+\])/g, "\n$1");
+  };
   drawerHeader.innerHTML = `
-    <span><strong data-i18n="table-topic-number"></strong> ${data.topicNumber}</span>
+    <span><strong data-i18n="table-topic-number"></strong> ${data.project_id}</span>
     <button class="close-drawer-button" aria-label="Close drawer" onclick="closeDrawer()">&times;</button>
   `;
   drawerContent.innerHTML = `
-    <p><strong data-i18n="table-topic-name"></strong> ${data.topicName}</p>
+    <p><strong data-i18n="table-topic-name"></strong> ${data.title}</p>
     <p><strong data-i18n="table-description"></strong>
-      <textarea class="textarea-component" data-field="description" rows="4" disabled>${data.description}</textarea>
+      <textarea class="textarea-component" data-field="description" rows="4" disabled>${formatText(
+        data.description
+      )}</textarea>
     </p>
     <p><strong data-i18n="table-participant-1"></strong>
-      <textarea class="textarea-component" data-field="participant1" rows="4" disabled>${data.participant1}</textarea>
+      <textarea class="textarea-component" data-field="participant1" rows="4" disabled>${formatText(
+        data.example_distribution_1
+      )}</textarea>
     </p>
     <p><strong data-i18n="table-participant-2"></strong>
-      <textarea class="textarea-component" data-field="participant2" rows="4" disabled>${data.participant2}</textarea>
+      <textarea class="textarea-component" data-field="participant2" rows="4" disabled>${formatText(
+        data.example_distribution_2
+      )}</textarea>
     </p>
     <p><strong data-i18n="table-participant-3"></strong>
-      <textarea class="textarea-component" data-field="participant3" rows="4" disabled>${data.participant3}</textarea>
+      <textarea class="textarea-component" data-field="participant3" rows="4" disabled>${formatText(
+        data.example_distribution_3
+      )}</textarea>
     </p>
     <p><strong data-i18n="table-integration"></strong>
-      <textarea class="textarea-component" data-field="integration" rows="3" disabled>${data.integration}</textarea>
+      <textarea class="textarea-component" data-field="integration" rows="3" disabled>${formatText(
+        data.integration
+      )}</textarea>
     </p>
     <p><strong data-i18n="table-requirements"></strong>
-      <textarea class="textarea-component" data-field="requirements" rows="3" disabled>${data.requirements}</textarea>
+      <textarea class="textarea-component" data-field="requirements" rows="3" disabled>${formatText(
+        data.requirements
+      )}</textarea>
     </p>
   `;
   applyTranslations();
 }
 
 function populateTopicDropdown(id) {
+  const projectTopics =
+    JSON.parse(localStorage.getItem("project_topics")) || [];
   const topicDropdown = document.getElementById(id);
   topicDropdown.innerHTML = "";
-  sampleData.forEach((topic) => {
+  projectTopics.forEach((project) => {
     const option = document.createElement("option");
-    option.value = topic.topicNumber;
-    option.textContent = `${topic.topicNumber} - ${topic.topicName}`;
+    option.value = project.projectId;
+    option.textContent = `${project.projectId} - ${project.projectTitle}`;
     topicDropdown.appendChild(option);
   });
 }
@@ -247,14 +236,6 @@ function addTeammateRow(containerId, editFieldsId = null) {
           type="text"
           class="facultyNumber"
           data-i18n-placeholder="faculty-number-placeholder-team"
-        />
-      </div>
-      <div class="input-container row-input">
-        <i class="input-icon fa-regular fa-user"></i>
-        <input
-          type="text"
-          class="studentName"
-          data-i18n-placeholder="student-name-placeholder-team"
         />
       </div>
       <button class="remove-button" onclick="removeTeammateRow(this, '${containerId}', '${editFieldsId}')">-</button>
@@ -350,7 +331,7 @@ function openEditTeamModal() {
   topicDropdown.value = project.topicNumber;
 
   teammatesContainer.innerHTML = "";
-  project.team.forEach((member) => {
+  project.members.forEach((member) => {
     const teammateRow = document.createElement("div");
     teammateRow.classList.add("flex-container", "row", "teammate-row");
     teammateRow.innerHTML = `
@@ -359,17 +340,8 @@ function openEditTeamModal() {
         <input
           type="text"
           class="facultyNumber"
-          value="${member.facultyNumber}"
+          value="${member.faculty_number}"
           data-i18n-placeholder="faculty-number-placeholder-team"
-        />
-      </div>
-      <div class="input-container row-input">
-        <i class="input-icon fa-regular fa-user"></i>
-        <input
-          type="text"
-          class="studentName"
-          value="${member.studentName}"
-          data-i18n-placeholder="student-name-placeholder-team"
         />
       </div>
       <button class="remove-button" onclick="removeTeammateRow(this,'teammates-edit-container')">-</button>
@@ -378,7 +350,7 @@ function openEditTeamModal() {
   });
 
   editFields.innerHTML = "";
-  project.team.forEach((_, index) => {
+  project.members.forEach((_, index) => {
     const participantKey = `participant${index + 1}`;
     const participantField = document.createElement("div");
     participantField.classList.add("input-container");
@@ -389,17 +361,52 @@ function openEditTeamModal() {
         class="textarea-component"
         rows="3"
         data-i18n-placeholder="${participantKey}-placeholder"
-      >${project.distribution?.[participantKey] || ""}</textarea>
+      >${project[`sample_distribution_${index + 1}`] || ""}</textarea>
     `;
     editFields.appendChild(participantField);
   });
 
-  commentsField.value = project.distribution?.comments || "";
+  commentsField.value = project?.comments || "";
 
   applyTranslations();
   forceApplyPlaceholders();
 
   openModal("edit-team-modal", "edit-team-modal-overlay");
+}
+
+function openRegisterTeamModal() {
+  const projectTopics = JSON.parse(localStorage.getItem("project_topics"));
+  if (!projectTopics || projectTopics.length === 0) {
+    displayErrorMessage("error-no-project-topics-found");
+    return;
+  }
+
+  const teammatesContainer = document.getElementById("teammates-container");
+
+  populateTopicDropdown("topic-dropdown");
+
+  teammatesContainer.innerHTML = "";
+
+  const teammateRow = document.createElement("div");
+  teammateRow.classList.add("flex-container", "row", "teammate-row");
+  teammateRow.innerHTML = `
+      <div class="input-container row-input">
+        <i class="input-icon fa-solid fa-hashtag"></i>
+        <input
+          type="text"
+          class="facultyNumber"
+          placeholder="Faculty Number"
+          data-i18n-placeholder="faculty-number-placeholder-team"
+        />
+      </div>
+      <button class="remove-button" onclick="removeTeammateRow(this,'teammates-container')">-</button>
+    `;
+  teammatesContainer.appendChild(teammateRow);
+
+  applyTranslations();
+  forceApplyPlaceholders();
+
+  openModal("register-team-modal", "register-team-modal-overlay");
 }
 
 function toggleSection(showId, hideId) {
@@ -420,6 +427,58 @@ function toggleSection(showId, hideId) {
   activeButton.classList.add("active");
 }
 
+async function assignTeamToProject(projectId, teamDetails) {
+  try {
+    const payload = {
+      project_id: projectId,
+      team: teamDetails,
+    };
+
+    const response = await fetch("/w24-project/backend/projects_student.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await response.json();
+    if (data.status === "success") {
+      setUserInLocalStorage("project", {
+        topicNumber: projectId,
+        ...teamDetails,
+      });
+      fetchProjects();
+    } else {
+      showErrorModal(data.message || "Failed to assign team.");
+    }
+  } catch (error) {
+    console.error("Error assigning team:", error);
+  }
+}
+
+async function editTeamDetails(projectId, updatedDetails) {
+  try {
+    const payload = {
+      project_id: projectId,
+      updated_details: updatedDetails,
+    };
+
+    const response = await fetch("/w24-project/backend/projects_student.php", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await response.json();
+    if (data.status === "success") {
+      fetchProjects(); // Refresh the project list
+    } else {
+      showErrorModal(data.message || "Failed to update team details.");
+    }
+  } catch (error) {
+    console.error("Error updating team details:", error);
+  }
+}
+
 function saveTeamDetails() {
   const selectedTopic = document.getElementById("topic-dropdown").value;
   const teammates = Array.from(
@@ -432,20 +491,20 @@ function saveTeamDetails() {
   }
 
   const teamDetails = teammates.map((row) => {
-    const facultyNumber = row.querySelector(".facultyNumber").value.trim();
-    const studentName = row.querySelector(".studentName").value.trim();
+    const faculty_number = row.querySelector(".facultyNumber").value.trim();
 
-    if (!facultyNumber || !studentName) {
+    if (!faculty_number) {
       displayErrorMessage("error-no-details-team-members");
       throw new Error("Validation Error: Missing teammate details.");
     }
 
-    return { facultyNumber, studentName };
+    return { faculty_number };
   });
 
-  const team = { topicNumber: selectedTopic, team: teamDetails };
+  const team = { members: teamDetails, comments: "" };
 
-  setUserInLocalStorage("project", team);
+  // Call assignTeamToProject
+  assignTeamToProject(selectedTopic, team);
 
   closeModal("register-team-modal", "register-team-modal-overlay");
 }
@@ -462,37 +521,92 @@ function saveEditTeamDetails() {
   }
 
   const teamDetails = teammates.map((row) => {
-    const facultyNumber = row.querySelector(".facultyNumber").value.trim();
-    const studentName = row.querySelector(".studentName").value.trim();
+    const faculty_number = row.querySelector(".facultyNumber").value.trim();
 
-    if (!facultyNumber || !studentName) {
+    if (!faculty_number) {
       displayErrorMessage("error-no-details-team-members");
       throw new Error("Validation Error: Missing teammate details.");
     }
 
-    return { facultyNumber, studentName };
+    return { faculty_number };
   });
 
-  const participant1 = document.getElementById("participant1")?.value.trim();
-  const participant2 = document.getElementById("participant2")?.value.trim();
-  const participant3 = document.getElementById("participant3")?.value.trim();
-  const comments = document.getElementById("comments")?.value.trim();
-
-  const distribution = {};
-  if (participant1) distribution.participant1 = participant1;
-  if (participant2) distribution.participant2 = participant2;
-  if (participant3) distribution.participant3 = participant3;
-  if (comments) distribution.comments = comments;
+  const sample_distribution_1 =
+    document.getElementById("participant1")?.value.trim() || null;
+  const sample_distribution_2 =
+    document.getElementById("participant2")?.value.trim() || null;
+  const sample_distribution_3 =
+    document.getElementById("participant3")?.value.trim() || null;
+  const comments = document.getElementById("comments")?.value.trim() || "";
 
   const updatedProject = {
     topicNumber: selectedTopic,
-    team: teamDetails,
-    ...(Object.keys(distribution).length > 0 && { distribution }),
+    members: teamDetails,
+    sample_distribution_1,
+    sample_distribution_2,
+    sample_distribution_3,
+    comments,
   };
 
-  console.log(updatedProject);
+  // Call editTeamDetails
+  editTeamDetails(selectedTopic, {
+    members: teamDetails,
+    sample_distribution_1,
+    sample_distribution_2,
+    sample_distribution_3,
+    comments,
+  });
 
+  // Save to localStorage
   setUserInLocalStorage("project", updatedProject);
 
   closeModal("edit-team-modal", "edit-team-modal-overlay");
+}
+
+async function fetchUserTeam() {
+  const user_id = localStorage.getItem("user_id");
+  if (!user_id) {
+    console.error("No user_id found in local storage.");
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      `/w24-project/backend/team_methods.php?user_id=${encodeURIComponent(
+        user_id
+      )}`,
+      {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+
+    const data = await response.json();
+
+    if (data.status === "success") {
+      if (data.data) {
+        const updatedProject = {
+          topicNumber: data.data.project_id,
+          members: data.data.team_members.split(",").map((member) => ({
+            faculty_number: member.trim(),
+          })),
+          sample_distribution_1: data.data.sample_distribution_1 || "",
+          sample_distribution_2: data.data.sample_distribution_2 || "",
+          sample_distribution_3: data.data.sample_distribution_3 || "",
+          comments: data.data.team_comments || "",
+        };
+
+        setUserInLocalStorage("project", updatedProject);
+      } else {
+        localStorage.removeItem("project"); // Clear project data if no team
+      }
+    } else {
+      console.error("Error fetching user's team:", data.message);
+      showErrorModal(
+        data.message || "An error occurred while fetching the team."
+      );
+    }
+  } catch (error) {
+    console.error("Error fetching user's team:", error);
+  }
 }
