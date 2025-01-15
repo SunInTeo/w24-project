@@ -8,9 +8,7 @@ CREATE TABLE
         email VARCHAR(100) NOT NULL UNIQUE,
         password VARCHAR(255) NOT NULL,
         essay_id INT,
-        project_id INT,
-        FOREIGN KEY (essay_id) REFERENCES Essays (essay_id) ON DELETE SET NULL,
-        FOREIGN KEY (project_id) REFERENCES Projects (project_id) ON DELETE SET NULL
+        project_id INT
     );
 
 CREATE TABLE
@@ -24,8 +22,7 @@ CREATE TABLE
         resume_of_presentation TEXT,
         keywords TEXT,
         comments TEXT,
-        user_id INT NOT NULL,
-        FOREIGN KEY (user_id) REFERENCES Users (user_id) ON DELETE CASCADE
+        user_id INT NOT NULL
     );
 
 CREATE TABLE
@@ -82,3 +79,10 @@ CREATE TABLE
             )
         )
     );
+
+ALTER TABLE Users
+ADD CONSTRAINT fk_essay FOREIGN KEY (essay_id) REFERENCES Essays (essay_id) ON DELETE SET NULL,
+ADD CONSTRAINT fk_project FOREIGN KEY (project_id) REFERENCES Projects (project_id) ON DELETE SET NULL;
+
+ALTER TABLE Essays
+ADD CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES Users (user_id) ON DELETE CASCADE;
