@@ -4,74 +4,70 @@ const drawerHeader = document.querySelector(".drawer-header");
 const drawerContent = document.querySelector(".drawer-content");
 let topicName = "";
 
-function generateSampleData(rowCount) {
-  const sampleData = [];
-  for (let i = 1; i <= rowCount; i++) {
-    sampleData.push({
-      number: i,
-      topicName: `Example Topic ${i}`,
-      sampleResources: `Example Resource ${i}`,
-      yourResources: `Your Link ${i}`,
-      presentationContent: `Presentation Details ${i}`,
-      sampleContent: `Sample Details ${i}`,
-      presentationResume: `Presentation Summary ${i}`,
-      keywords: `Keywords ${i}`,
-      nonFormal: `Informal ${i}`,
-    });
-  }
-  return sampleData;
-}
-
-function renderTable(data) {
-  const tableBody = document.querySelector("#research_papers tbody");
-
-  tableBody.innerHTML = "";
-
-  data.forEach((item) => {
-    const row = document.createElement("tr");
-
-    row.innerHTML = `
-      <td>${item.number}</td>
-      <td>${item.topicName}</td>
-      <td>${item.sampleResources}</td>
-      <td>${item.yourResources}</td>
-      <td>${item.presentationContent}</td>
-      <td>${item.sampleContent}</td>
-      <td>${item.presentationResume}</td>
-      <td>${item.keywords}</td>
-      <td>${item.nonFormal}</td>
-    `;
-
-    tableBody.appendChild(row);
-  });
-}
-
 document.addEventListener("DOMContentLoaded", () => {
-  const sampleData = generateSampleData(10);
-  renderTable(sampleData);
+  initializeTable();
+  fetchResearchPapers("papers_student");
 });
 
-function openPageDrawer(data) {
-  populateDrawer(data);
-  openDrawer("drawer", "drawerOverlay");
+function renderTable(data) {
+  const table = document.querySelector("#research_papers");
+  if (!table) {
+    console.error("Table with ID 'research_papers' not found.");
+    return;
+  }
+
+  let tbody = table.querySelector("tbody");
+  if (!tbody) {
+    console.error("The <tbody> element does not exist.");
+    tbody = document.createElement("tbody");
+    table.appendChild(tbody);
+  }
+  if (!data.length) {
+    document.querySelector(".table-container").innerHTML = `
+      <div class="card no-data-card">
+        <div class="card-header" data-i18n="no-data-available">No Data Available</div>
+        <div class="card-body">
+          No research papers are available at the moment. Please add new topics to display them here.
+        </div>
+      </div>`;
+    applyTranslations();
+    return;
+  }
+
+  tbody.innerHTML = "";
+  data.forEach((item) => {
+    const row = `
+      <tr>
+        <td>${item.essay_id}</td>
+        <td>${item.title}</td>
+        <td>${item.resources || "-"}</td>
+        <td>${item.own_resources || "-"}</td>
+        <td>${item.content_of_presentation || "-"}</td>
+        <td>${item.content_of_examples || "-"}</td>
+        <td>${item.resume_of_presentation || "-"}</td>
+        <td>${item.keywords || "-"}</td>
+        <td>${item.comments || "-"}</td>
+      </tr>`;
+    tbody.insertAdjacentHTML("beforeend", row);
+  });
 }
 
 function populateDrawer(data) {
   const formatText = (text) => {
-    if (!text) return "";
+    if (!text || text === "-") return "";
     return text.replace(/(\d+\.+\D)/g, "\n$1").replace(/(\[\d+\])/g, "\n$1");
   };
 
   drawerHeader.innerHTML = `
-    <span><strong data-i18n="table-topic-number"></strong> ${data.topicNumber}</span>
+  <span><strong data-i18n="table-topic-number"></strong>     <span id="topic-number-id">${data.topicNumber}</span></span>
     <button class="close-drawer-button" aria-label="Close drawer" onclick="closeDrawer()">
       &times;
     </button>
   `;
 
   drawerContent.innerHTML = `
-    <p><strong data-i18n="table-topic-name"></strong>
-      <span>${data.topicName}</span>
+      <p><strong data-i18n="table-topic-name"></strong>
+      <span id="topic-name-id">${data.topicName}</span>
     </p>
     <p><strong data-i18n="table-sample-resources"></strong>
       <textarea class="textarea-component" disabled data-field="sampleResources" rows="5">${formatText(
@@ -109,7 +105,7 @@ function populateDrawer(data) {
       )}</textarea>
     </p>
     <div class="flex-container">
-    <button class="save-drawer-button" onclick="saveDrawer()" data-i18n="send-text"></button>
+    <button class="save-drawer-button" onclick="editEssayStudent()" data-i18n="send-text"></button>
     <button class="cancel-drawer-button" onclick="closeDrawer()" data-i18n="cancel-text"></button>
     </div>
   `;
@@ -139,37 +135,50 @@ document
     }
   });
 
-function saveDrawer() {
-  const editedData = {
-    topicNumber: document
-      .querySelector(".drawer-header span")
-      .textContent.trim(),
-    topicName: topicName,
-    sampleResources: document
-      .querySelector("textarea[data-field='sampleResources']")
-      .value.trim(),
-    yourResources: document
-      .querySelector("textarea[data-field='yourResources']")
-      .value.trim(),
-    presentationContent: document
-      .querySelector("textarea[data-field='presentationContent']")
-      .value.trim(),
-    sampleContent: document
-      .querySelector("textarea[data-field='sampleContent']")
-      .value.trim(),
-    presentationResume: document
-      .querySelector("textarea[data-field='presentationResume']")
-      .value.trim(),
-    keywords: document
-      .querySelector("textarea[data-field='keywords']")
-      .value.trim(),
-    nonFormal: document
-      .querySelector("textarea[data-field='nonFormal']")
-      .value.trim(),
+
+
+async function editEssayStudent() {
+  const essayData = {
+    user_id: localStorage.getItem("user_id"),
+    essay_id: document.querySelector("#topic-number-id").textContent.trim(),
+    title: document.querySelector("#topic-name-id").textContent.trim(),
+    resources: checkTextIfNull("textarea[data-field='sampleResources']"),
+    own_resources: checkTextIfNull("textarea[data-field='yourResources']"),
+    content_of_presentation: checkTextIfNull(
+      "textarea[data-field='presentationContent']"
+    ),
+    content_of_examples: checkTextIfNull(
+      "textarea[data-field='sampleContent']"
+    ),
+    resume_of_presentation: checkTextIfNull(
+      "textarea[data-field='presentationResume']"
+    ),
+    keywords: checkTextIfNull("textarea[data-field='keywords']"),
+    comments: checkTextIfNull("textarea[data-field='nonFormal']"),
   };
 
-  console.log("Edited Data:", editedData);
-  closeDrawer();
+  if (!essayData.essay_id) {
+    showErrorModal("Essay ID is required to save changes.");
+    return;
+  }
+
+  try {
+    const response = await fetch("/w24-project/backend/papers_student.php", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(essayData),
+    });
+
+    const data = await response.json();
+    if (data.status === "success") {
+      fetchResearchPapers("papers_student");
+      closeDrawer();
+    } else {
+      showErrorModal(data.message || "Failed to update essay.");
+    }
+  } catch (error) {
+    console.error("Error updating essay:", error);
+  }
 }
 
 function downloadTableAsExcel(tableID) {
@@ -220,33 +229,40 @@ function downloadTableAsExcel(tableID) {
   XLSX.writeFile(workbook, "research_papers_table.xlsx");
 }
 
-document.getElementById('propose-topic-form').addEventListener('submit', async (event) => {
-  event.preventDefault();
-  const proposedTopic = document.getElementById('proposedTopic').value.trim();
-  const proposeTopicText = document.getElementById('proposeTopicText').value.trim();
+document
+  .getElementById("propose-topic-form")
+  .addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const proposedTopic = document.getElementById("proposedTopic").value.trim();
+    const proposeTopicText = document
+      .getElementById("proposeTopicText")
+      .value.trim();
 
-  if (!proposedTopic || !proposeTopicText) {
-      alert('Please fill out all fields.');
+    if (!proposedTopic || !proposeTopicText) {
+      alert("Please fill out all fields.");
       return;
-  }
+    }
 
-  try {
-      const response = await fetch('./propose_topic.php', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ topic: proposedTopic, description: proposeTopicText }),
+    try {
+      const response = await fetch("./propose_topic.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          topic: proposedTopic,
+          description: proposeTopicText,
+        }),
       });
 
       const data = await response.json();
 
-      if (data.status === 'success') {
-          alert('Topic proposed successfully!');
-          closeModal('propose-topic-modal', 'propose-topic-modal-overlay');
-          resetForm('propose-topic-form');
+      if (data.status === "success") {
+        alert("Topic proposed successfully!");
+        closeModal("propose-topic-modal", "propose-topic-modal-overlay");
+        resetForm("propose-topic-form");
       } else {
-          alert(data.message);
+        alert(data.message);
       }
-  } catch (error) {
-      console.error('Error proposing topic:', error);
-  }
-});
+    } catch (error) {
+      console.error("Error proposing topic:", error);
+    }
+  });

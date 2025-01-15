@@ -5,14 +5,37 @@ header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     try {
-        $stmt = $pdo->query("SELECT * FROM Essays");
+        $stmt = $pdo->query("
+            SELECT 
+                e.essay_id, 
+                e.title, 
+                e.resources, 
+                e.own_resources, 
+                e.content_of_presentation, 
+                e.content_of_examples, 
+                e.resume_of_presentation, 
+                e.keywords, 
+                e.comments, 
+                u.faculty_number 
+            FROM Essays e
+            JOIN Users u ON e.user_id = u.user_id
+        ");
         $essays = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        echo json_encode(['status' => 'success', 'data' => $essays]);
+
+        if ($essays) {
+            foreach ($essays as &$essay) {
+                $essay['keywords'] = json_decode($essay['keywords'], true); 
+            }
+            echo json_encode(['status' => 'success', 'data' => $essays]);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'No essays available.']);
+        }
     } catch (PDOException $e) {
         echo json_encode(['status' => 'error', 'message' => 'Database error: ' . $e->getMessage()]);
         http_response_code(500);
     }
-} elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+}
+ elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = trim($_POST['title'] ?? '');
     $resources = trim($_POST['resources'] ?? '');
     $own_resources = trim($_POST['own_resources'] ?? '');

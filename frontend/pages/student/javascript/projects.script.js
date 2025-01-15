@@ -91,7 +91,7 @@ const registerTeamButton = document.querySelector(".register-team-button");
 const editTeamButton = document.querySelector(".edit-team-button");
 const pageActionsContainer = document.getElementById("page-actions");
 
-function updateLocalStorage(key, value) {
+function setUserInLocalStorage(key, value) {
   localStorage.setItem(key, JSON.stringify(value));
   if (key === "project") {
     const isProjectStored = Boolean(value);
@@ -445,7 +445,7 @@ function saveTeamDetails() {
 
   const team = { topicNumber: selectedTopic, team: teamDetails };
 
-  updateLocalStorage("project", team);
+  setUserInLocalStorage("project", team);
 
   closeModal("register-team-modal", "register-team-modal-overlay");
 }
@@ -492,7 +492,7 @@ function saveEditTeamDetails() {
 
   console.log(updatedProject);
 
-  updateLocalStorage("project", updatedProject);
+  setUserInLocalStorage("project", updatedProject);
 
   closeModal("edit-team-modal", "edit-team-modal-overlay");
 }

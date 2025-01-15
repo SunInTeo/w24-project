@@ -5,22 +5,8 @@ const drawerContent = document.querySelector(".drawer-content");
 document.addEventListener("DOMContentLoaded", () => {
   initializeTable();
   initializeEventListeners();
-  fetchResearchPapers();
+  fetchResearchPapers("papers_admin");
 });
-
-function initializeTable() {
-  const table = document.querySelector("#research_papers");
-  if (!table) {
-    console.error("Table with ID 'research_papers' not found.");
-    return;
-  }
-
-  const tbody = table.querySelector("tbody");
-  if (!tbody) {
-    const newTbody = document.createElement("tbody");
-    table.appendChild(newTbody);
-  }
-}
 
 function initializeEventListeners() {
   const selectAllCheckbox = document.querySelector("#select-all");
@@ -30,7 +16,7 @@ function initializeEventListeners() {
 
   const deleteButton = document.getElementById("delete-selected");
   if (deleteButton) {
-    deleteButton.addEventListener("click", deleteSelectedRows);
+    deleteButton.addEventListener("click", deleteSelectedEssays);
   }
 
   document
@@ -73,7 +59,7 @@ function renderTable(data) {
         }" /></td>
         <td>${item.essay_id}</td>
         <td>${item.title}</td>
-        <td>${item.user_id}</td>
+        <td>${item.faculty_number || "-"}</td>
         <td>${item.resources || "-"}</td>
         <td>${item.own_resources || "-"}</td>
         <td>${item.content_of_presentation || "-"}</td>
@@ -88,21 +74,6 @@ function renderTable(data) {
   document.querySelectorAll(".row-checkbox").forEach((checkbox) => {
     checkbox.addEventListener("change", handleCheckboxChange);
   });
-}
-
-async function fetchResearchPapers() {
-  try {
-    const response = await fetch("/w24-project/backend/papers_admin.php");
-    const data = await response.json();
-
-    if (data.status === "success") {
-      renderTable(data.data);
-    } else {
-      console.error("Error fetching research papers:", data.message);
-    }
-  } catch (error) {
-    console.error("Error fetching research papers:", error);
-  }
 }
 
 function toggleSelectAll(event) {
@@ -123,13 +94,13 @@ function handleCheckboxChange() {
   deleteButton.disabled = !anyChecked;
 }
 
-async function deleteSelectedRows() {
+async function deleteSelectedEssays() {
   const selectedIds = Array.from(
     document.querySelectorAll(".row-checkbox:checked")
   ).map((checkbox) => checkbox.dataset.id);
 
   if (!selectedIds.length) {
-    alert("No rows selected for deletion.");
+    showErrorModal("No rows selected for deletion.");
     return;
   }
 
@@ -150,9 +121,9 @@ async function deleteSelectedRows() {
       });
 
       document.getElementById("delete-selected").disabled = true;
-      fetchResearchPapers();
+      fetchResearchPapers("papers_admin");
     } else {
-      alert(data.message || "Failed to delete rows.");
+      showErrorModal(data.message || "Failed to delete rows.");
     }
   } catch (error) {
     console.error("Error deleting rows:", error);
@@ -183,11 +154,6 @@ function handleRowClick(event) {
   openPageDrawer(rowData);
 }
 
-function openPageDrawer(data) {
-  populateDrawer(data);
-  openDrawer("drawer", "drawerOverlay");
-}
-
 function populateDrawer(data) {
   const formatText = (text) => {
     if (!text || text === "-") return "";
@@ -207,7 +173,13 @@ function populateDrawer(data) {
       <span class="student-fn">${data.studentFN || "неизбрана"}</span>
     </p>
     <p><strong data-i18n="table-topic-name"></strong>
-      <span id="topic-name-id">${data.topicName}</span>
+     <div class="input-container">
+            <input
+              type="text"
+              data-field="topicName"    
+              value="${data.topicName}"       
+            />
+          </div>
     </p>
     <p><strong data-i18n="table-sample-resources"></strong>
       <textarea class="textarea-component" data-field="sampleResources" rows="5">${formatText(
@@ -253,18 +225,29 @@ function populateDrawer(data) {
   applyTranslations();
 }
 
-async function addTopic(event) {
+async function addEssay(event) {
   event.preventDefault();
 
-  const formData = new FormData();
   const form = document.getElementById("add-topic-form");
+  const title = form.querySelector("#addedTopic").value.trim();
+  const resources = form
+    .querySelector("#sampleResourcesTopicText")
+    .value.trim();
 
+  if (!title) {
+    showErrorMessage("error-title-required");
+    return;
+  }
+
+  if (!resources) {
+    showErrorMessage("error-resources-required");
+    return;
+  }
+
+  const formData = new FormData();
   formData.append("user_id", localStorage.getItem("user_id"));
-  formData.append("title", form.querySelector("#addedTopic").value.trim());
-  formData.append(
-    "resources",
-    form.querySelector("#sampleResourcesTopicText").value.trim()
-  );
+  formData.append("title", title);
+  formData.append("resources", resources);
 
   try {
     const response = await fetch("/w24-project/backend/papers_admin.php", {
@@ -274,10 +257,10 @@ async function addTopic(event) {
 
     const data = await response.json();
     if (data.status === "success") {
-      fetchResearchPapers();
+      fetchResearchPapers("papers_admin");
       closeModal("add-topic-modal", "add-topic-modal-overlay");
     } else {
-      alert(data.message);
+      showErrorModal(data.message);
     }
   } catch (error) {
     console.error("Error adding topic:", error);
@@ -285,15 +268,10 @@ async function addTopic(event) {
   resetForm("add-topic-form");
 }
 
-function checkTextIfNull(querySelectorName) {
-  const element = drawer.querySelector(querySelectorName);
-  return element ? element.value.trim() : "";
-}
-
 async function editEssay() {
   const essayData = {
     essay_id: document.querySelector("#topic-number-id").textContent.trim(),
-    title: document.querySelector("#topic-name-id").textContent.trim(),
+    title: checkTextIfNull("input[data-field='topicName']"),
     resources: checkTextIfNull("textarea[data-field='sampleResources']"),
     own_resources: checkTextIfNull("textarea[data-field='yourResources']"),
     content_of_presentation: checkTextIfNull(
@@ -318,13 +296,60 @@ async function editEssay() {
 
     const data = await response.json();
     if (data.status === "success") {
-      fetchResearchPapers();
+      fetchResearchPapers("papers_admin");
       closeDrawer();
     } else {
-      alert(data.message || "Failed to update essay.");
+      showErrorModal(data.message || "Failed to update essay.");
     }
   } catch (error) {
     console.error("Error updating essay:", error);
-    alert("An error occurred while trying to update the essay.");
   }
+}
+
+function downloadTableAsExcel(tableID) {
+  const table = document.querySelector(`.table#${tableID}`);
+
+  const data = [];
+  const rows = table.querySelectorAll("tr");
+  rows.forEach((row) => {
+    const rowData = [];
+    const cells = row.querySelectorAll("th, td");
+    cells.forEach((cell) => {
+      rowData.push(cell.innerText.trim());
+    });
+    data.push(rowData);
+  });
+
+  const workbook = XLSX.utils.book_new();
+  const worksheet = XLSX.utils.aoa_to_sheet(data);
+
+  const columnWidths = [
+    { wch: 15 },
+    { wch: 20 },
+    { wch: 40 },
+    { wch: 40 },
+    { wch: 40 },
+    { wch: 40 },
+    { wch: 40 },
+    { wch: 40 },
+    { wch: 30 },
+  ];
+  worksheet["!cols"] = columnWidths;
+
+  const rowHeights = [
+    { hpt: 25 },
+    { hpt: 55 },
+    { hpt: 55 },
+    { hpt: 55 },
+    { hpt: 55 },
+    { hpt: 55 },
+    { hpt: 55 },
+    { hpt: 55 },
+    { hpt: 55 },
+  ];
+  worksheet["!rows"] = rowHeights;
+
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+
+  XLSX.writeFile(workbook, "research_papers_table.xlsx");
 }

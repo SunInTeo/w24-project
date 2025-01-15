@@ -116,6 +116,8 @@ const languages = {
     answer: "Answer",
     "add-faq": "Add FAQ",
     "no-data-available": "No data available",
+    "error-title-required": "Essay title is required",
+    "error-resources-required": "Essay resources are required",
   },
   bg: {
     "auth-title": "Автентикация",
@@ -233,6 +235,8 @@ const languages = {
     answer: "Отговор",
     "add-faq": "Добави ЧЗВ",
     "no-data-available": "В момента няма данни.",
+    "error-title-required": "Името на темата е задължително",
+    "error-resources-required": "Ресурсите към темата са задължителни",
   },
 };
 

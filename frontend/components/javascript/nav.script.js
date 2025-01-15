@@ -1,6 +1,4 @@
 (function () {
-
-
   function isPageExists(path) {
     try {
       const http = new XMLHttpRequest();
@@ -11,7 +9,6 @@
       return false;
     }
   }
-
 
   function checkAuthenticationAndNavigate() {
     const username = localStorage.getItem("username");

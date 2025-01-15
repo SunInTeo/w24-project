@@ -123,13 +123,14 @@
                   required
                 ></textarea>
               </form>
+              <span class="error-message"> </span>
             </div>
           </div>
           <div class="modal-footer">
             <button
               class="primary"
               data-i18n="send-text"
-              onclick="addTopic(event)"
+              onclick="addEssay(event)"
             ></button>
             <button
               class="secondary"
@@ -141,6 +142,34 @@
       </article>
     </section>
 
+    <section>
+      <div
+        class="modal-overlay"
+        id="error-modal-overlay"
+        style="display: none"
+      ></div>
+      <div class="modal" id="error-modal" style="display: none">
+        <div class="modal-header">
+          <span data-i18n="oops"></span>
+          <button
+            class="modal-close-button"
+            aria-label="Close modal"
+            onclick="closeModal('error-modal', 'error-modal-overlay')"
+          >
+            &times;
+          </button>
+        </div>
+        <div class="modal-body"></div>
+        <div class="modal-footer">
+          <button
+            class="secondary"
+            onclick="closeModal('error-modal','error-modal-overlay')"
+          >
+            Ok
+          </button>
+        </div>
+      </div>
+    </section>
     <div class="language-toggle"></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -151,5 +180,6 @@
     <script src="../../components/javascript/modal.script.js"></script>
     <script src="../../components/javascript/drawer.script.js"></script>
     <script src="./javascript/papers.script.js"></script>
+    <script src="../javascript/papers_common.script.js"></script>
   </body>
 </html>

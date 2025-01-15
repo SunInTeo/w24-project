@@ -32,3 +32,13 @@ document.addEventListener("DOMContentLoaded", function () {
 function resetForm(formId) {
   document.getElementById(formId).reset();
 }
+
+function showErrorMessage(errorMessage) {
+  const errorContainer = document.querySelector(".error-message");
+  errorContainer.setAttribute("data-i18n", errorMessage);
+  errorContainer.style.display = "block";
+  applyTranslations();
+  setTimeout(() => {
+    errorContainer.style.display = "none";
+  }, 3000);
+}
