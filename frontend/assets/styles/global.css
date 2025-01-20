@@ -10,6 +10,8 @@
   --focus-border-color: #97d8c4;
   --focus-shadow-color: rgba(151, 216, 196, 0.5);
   --overlay-color: rgba(0, 0, 0, 0.5);
+  --error-color: rgb(176, 31, 31);
+  --success-color: rgb(76, 175, 79);
 }
 
 body {
@@ -113,4 +115,8 @@ footer {
   padding: 30px;
   height: 80vh;
   overflow: scroll;
+}
+
+label {
+  font-size: smaller;
 }

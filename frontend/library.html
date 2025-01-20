@@ -285,6 +285,18 @@
       <section class="spinner-container">
         <span class="loader"></span>
       </section>
+
+      <section>
+        <div id="toast" class="toast hidden">
+          <span id="toast-message"></span>
+        </div>
+        <button onclick="showToast('This is a success message!', 'success')">
+          Show Success Toast
+        </button>
+        <button onclick="showToast('This is a error message!', 'error')">
+          Show error Toast
+        </button>
+      </section>
     </main>
     <footer>
       <div>
@@ -306,5 +318,6 @@
     <script src="./components/javascript/modal.script.js"></script>
     <script src="./components/javascript/drawer.script.js"></script>
     <script src="./components/javascript/accordion.script.js"></script>
+    <script src="./components/javascript/toast.script.js"></script>
   </body>
 </html>

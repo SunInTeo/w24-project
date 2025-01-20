@@ -1,44 +1,53 @@
 <?php
+require_once __DIR__ . '/classes/db.php';
+
 header('Content-Type: application/json');
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $input = json_decode(file_get_contents("php://input"), true);
+$input = json_decode(file_get_contents('php://input'), true);
 
-    $topic = trim($input['topic'] ?? '');
-    $description = trim($input['description'] ?? '');
-    $recipient = 'example@example.com'; // Replace with the recipient email address
-    $subject = "New Topic Proposal: $topic";
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $proposalType = trim($input['proposal_type'] ?? '');
+    $topicLabel = trim($input['topic_label'] ?? '');
+    $topicInfo = trim($input['topic_info'] ?? '');
+    $proposedByUserId = trim($input['proposed_by_user_id'] ?? '');
+    $proposedByUserName = trim($input['proposed_by_user_name'] ?? '');
 
-    if (empty($topic) || empty($description)) {
-        echo json_encode(['status' => 'error', 'message' => 'Both topic and description are required.']);
-        http_response_code(400);
+    // Check for empty fields
+    if (empty($proposalType) || empty($topicLabel) || empty($topicInfo) || empty($proposedByUserId) || empty($proposedByUserName)) {
+        echo json_encode(["success" => false, "message" => "All fields are required."]);
         exit;
     }
 
-    $message = "You have received a new topic proposal:\n\n";
-    $message .= "Topic: $topic\n\n";
-    $message .= "Description:\n$description";
+    try {
+        // Ensure the proposed user exists
+        $userCheckStmt = $pdo->prepare("SELECT COUNT(*) FROM Users WHERE faculty_number = :faculty_number");
+        $userCheckStmt->bindParam(':faculty_number', $proposedByUserId, PDO::PARAM_STR);
+        $userCheckStmt->execute();
+        $userExists = $userCheckStmt->fetchColumn();
 
-    $headers = [
-        'From' => 'no-reply@yourdomain.com', // Replace with your domain email
-        'Reply-To' => 'no-reply@yourdomain.com',
-        'X-Mailer' => 'PHP/' . phpversion(),
-    ];
+        if (!$userExists) {
+            echo json_encode(["success" => false, "message" => "Invalid user ID."]);
+            exit;
+        }
 
-    $headersString = '';
-    foreach ($headers as $key => $value) {
-        $headersString .= "$key: $value\r\n";
+        // Insert the proposed topic
+        $stmt = $pdo->prepare(
+            "INSERT INTO ProposedTopics (proposal_type, topic_label, topic_info, proposed_by_user_id, proposed_by_user_name)
+             VALUES (:proposal_type, :topic_label, :topic_info, :proposed_by_user_id, :proposed_by_user_name)"
+        );
+        $stmt->bindParam(':proposal_type', $proposalType, PDO::PARAM_STR);
+        $stmt->bindParam(':topic_label', $topicLabel, PDO::PARAM_STR);
+        $stmt->bindParam(':topic_info', $topicInfo, PDO::PARAM_STR);
+        $stmt->bindParam(':proposed_by_user_id', $proposedByUserId, PDO::PARAM_STR);
+        $stmt->bindParam(':proposed_by_user_name', $proposedByUserName, PDO::PARAM_STR);
+
+        if ($stmt->execute()) {
+            echo json_encode(["success" => true, "message" => "Topic proposed successfully."]);
+        } else {
+            echo json_encode(["success" => false, "message" => "Failed to propose topic."]);
+        }
+    } catch (PDOException $e) {
+        echo json_encode(["success" => false, "message" => "Database error: " . $e->getMessage()]);
     }
-
-    if (mail($recipient, $subject, $message, $headersString)) {
-        echo json_encode(['status' => 'success', 'message' => 'Email sent successfully.']);
-        http_response_code(200);
-    } else {
-        echo json_encode(['status' => 'error', 'message' => 'Failed to send email.']);
-        http_response_code(500);
-    }
-} else {
-    echo json_encode(['status' => 'error', 'message' => 'Invalid request method.']);
-    http_response_code(405);
 }
 ?>

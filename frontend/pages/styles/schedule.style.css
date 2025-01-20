@@ -113,7 +113,7 @@ table td {
 }
 
 .input-container.small-width {
-  flex: 0 0 20%;
+  flex: 0 0 30%;
 }
 .input-container input {
   padding-right: 0px;
@@ -135,7 +135,11 @@ table td {
 }
 
 .modal.timeslot {
-  width: 400px;
+  width: 300px;
+}
+
+.modal#add-timeslot-modal {
+  width: 450px;
 }
 
 .input-container input {

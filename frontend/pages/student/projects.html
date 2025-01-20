@@ -96,35 +96,46 @@
           <div class="modal-body">
             <div class="block-container">
               <span data-i18n="propose-topic-text"></span>
-              <div class="input-container">
-                <i class="input-icon fa-solid fa-a"></i>
-                <input
-                  type="text"
-                  id="proposedTopic"
-                  data-i18n-placeholder="propose-topic-modal"
-                />
-                <button
-                  class="clear-button"
-                  aria-label="Clear input"
-                  title="Clear input"
-                >
-                  &times;
-                </button>
-              </div>
-              <textarea
-                class="textarea-component"
-                id="proposeTopicText"
-                data-i18n-placeholder="propose-topic-textarea"
-                rows="7"
-                required
-              ></textarea>
+              <form id="propose-topic-form">
+                <div class="input-container">
+                  <i class="input-icon fa-solid fa-a"></i>
+                  <input
+                    type="text"
+                    id="proposedTopic"
+                    data-i18n-placeholder="propose-topic-modal"
+                  />
+                  <button
+                    class="clear-button"
+                    aria-label="Clear input"
+                    title="Clear input"
+                  >
+                    &times;
+                  </button>
+                </div>
+                <textarea
+                  class="textarea-component"
+                  id="proposeTopicText"
+                  data-i18n-placeholder="propose-topic-textarea"
+                  rows="7"
+                  required
+                ></textarea>
+              </form>
+              <div
+                class="error-message"
+                id="errorMessage"
+                style="display: none"
+              ></div>
             </div>
           </div>
           <div class="modal-footer">
-            <button class="primary" data-i18n="send-text"></button>
+            <button
+              class="primary"
+              data-i18n="send-text"
+              onclick="sendProposeTopic('Project')"
+            ></button>
             <button
               class="secondary"
-              onclick="closeModal('propose-topic-modal','propose-topic-modal-overlay')"
+              onclick="closeModal('propose-topic-modal','propose-topic-modal-overlay');resetForm('propose-topic-form')"
               data-i18n="cancel-text"
             ></button>
           </div>
@@ -295,7 +306,12 @@
             ></div>
           </div>
 
-          <div class="modal-footer">
+          <div class="modal-footer flex-container">
+            <button
+              class="delete"
+              onclick="openModal('confirm-modal', 'confirm-modal-overlay')"
+              data-i18n="delete-text"
+            ></button>
             <button
               class="primary"
               onclick="saveEditTeamDetails()"
@@ -340,6 +356,41 @@
       </div>
     </section>
 
+    <section>
+      <div
+        class="modal-overlay"
+        id="confirm-modal-overlay"
+        style="display: none"
+      ></div>
+      <div class="modal" id="confirm-modal" style="display: none">
+        <div class="modal-header">
+          <span data-i18n="confirm-modal-header"></span>
+          <button
+            class="modal-close-button"
+            aria-label="Close modal"
+            onclick="closeModal('confirm-modal', 'confirm-modal-overlay')"
+          >
+            &times;
+          </button>
+        </div>
+        <div class="modal-body">
+          <span data-i18n="confirm-modal-message"></span>
+        </div>
+        <div class="modal-footer">
+          <button class="primary" onclick="deleteTeam()">Ok</button>
+          <button
+            class="secondary"
+            onclick="closeModal('confirm-modal','confirm-modal-overlay')"
+            data-i18n="cancel-text"
+          ></button>
+        </div>
+      </div>
+    </section>
+
+    <div id="toast" class="toast hidden">
+      <span id="toast-message"></span>
+    </div>
+
     <div class="language-toggle"></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -349,6 +400,10 @@
     <script src="../../components/javascript/input.script.js"></script>
     <script src="../../components/javascript/modal.script.js"></script>
     <script src="../../components/javascript/drawer.script.js"></script>
+    <script src="../../components/javascript/toast.script.js"></script>
+
     <script src="./javascript/projects.script.js"></script>
+    <script src="../javascript/projects_common.script.js"></script>
+    <script src="../javascript/propose_topic.script.js"></script>
   </body>
 </html>

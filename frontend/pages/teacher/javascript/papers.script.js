@@ -16,7 +16,9 @@ function initializeEventListeners() {
 
   const deleteButton = document.getElementById("delete-selected");
   if (deleteButton) {
-    deleteButton.addEventListener("click", deleteSelectedEssays);
+    deleteButton.addEventListener("click", () => {
+      openModal("confirm-modal", "confirm-modal-overlay");
+    });
   }
 
   document
@@ -42,7 +44,7 @@ function renderTable(data) {
       <div class="card no-data-card">
         <div class="card-header" data-i18n="no-data-available">No Data Available</div>
         <div class="card-body">
-          No research papers are available at the moment. Please add new topics to display them here.
+          <span data-i18n="no-research-papers"></span>
         </div>
       </div>`;
     applyTranslations();
@@ -122,12 +124,13 @@ async function deleteSelectedEssays() {
 
       document.getElementById("delete-selected").disabled = true;
       fetchResearchPapers("papers_admin");
+      showToast("success-deleting-essays-admin");
     } else {
       showErrorModal(data.message || "Failed to delete rows.");
     }
   } catch (error) {
     console.error("Error deleting rows:", error);
-    alert("An error occurred while trying to delete rows.");
+    showToast("error-deleting-essays-admin", "error");
   }
 }
 
@@ -259,11 +262,13 @@ async function addEssay(event) {
     if (data.status === "success") {
       fetchResearchPapers("papers_admin");
       closeModal("add-topic-modal", "add-topic-modal-overlay");
+      showToast("success-adding-essay-admin");
     } else {
       showErrorModal(data.message);
     }
   } catch (error) {
     console.error("Error adding topic:", error);
+    showToast("error-adding-essay-admin", "error");
   }
   resetForm("add-topic-form");
 }
@@ -298,11 +303,13 @@ async function editEssay() {
     if (data.status === "success") {
       fetchResearchPapers("papers_admin");
       closeDrawer();
+      showToast("success-editing-essay-admin");
     } else {
       showErrorModal(data.message || "Failed to update essay.");
     }
   } catch (error) {
     console.error("Error updating essay:", error);
+    showToast("error-editing-essay-admin", "error");
   }
 }
 

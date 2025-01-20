@@ -44,6 +44,15 @@ button.disabled {
   opacity: 0.6;
 }
 
+button.delete {
+  color: white;
+  background-color: rgb(176, 31, 31);
+}
+button.delete:hover {
+  color: white;
+  background-color: rgb(176, 31, 31);
+}
+
 /* Radio Button Component */
 .radio-container {
   display: flex;
@@ -163,4 +172,19 @@ input:checked + .toggle-label {
 
 input:checked + .toggle-label::before {
   transform: translateX(30px);
+}
+
+
+.proposed-topics-button {
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+  border: none;
+  padding: 8px 12px;
+  font-size: small;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 5px;
+}
+.proposed-topics-button:hover {
+  background-color: var(--primary-color);
 }

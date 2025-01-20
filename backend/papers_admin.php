@@ -22,27 +22,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         ");
         $essays = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        if ($essays) {
-            foreach ($essays as &$essay) {
-                $essay['keywords'] = json_decode($essay['keywords'], true); 
-            }
-            echo json_encode(['status' => 'success', 'data' => $essays]);
-        } else {
-            echo json_encode(['status' => 'error', 'message' => 'No essays available.']);
-        }
+        echo json_encode(['status' => 'success', 'data' => $essays]);
     } catch (PDOException $e) {
         echo json_encode(['status' => 'error', 'message' => 'Database error: ' . $e->getMessage()]);
         http_response_code(500);
     }
-}
- elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+} elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = trim($_POST['title'] ?? '');
     $resources = trim($_POST['resources'] ?? '');
     $own_resources = trim($_POST['own_resources'] ?? '');
     $content_of_presentation = trim($_POST['content_of_presentation'] ?? '');
     $content_of_examples = trim($_POST['content_of_examples'] ?? '');
     $resume_of_presentation = trim($_POST['resume_of_presentation'] ?? '');
-    $keywords = $_POST['keywords'] ?? '';
+    $keywords = trim($_POST['keywords'] ?? '');
     $user_id = intval($_POST['user_id'] ?? 0);
 
     if (empty($title) || empty($resources) || empty($user_id)) {
@@ -67,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             'user_id' => $user_id,
         ]);
 
-        echo json_encode(['status' => 'success', 'message' => 'Topic added successfully.']);
+        echo json_encode(['status' => 'success', 'message' => 'Essay added successfully.']);
         http_response_code(200);
     } catch (PDOException $e) {
         echo json_encode(['status' => 'error', 'message' => 'Database error: ' . $e->getMessage()]);
@@ -94,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         echo json_encode(['status' => 'error', 'message' => 'Database error: ' . $e->getMessage()]);
         http_response_code(500);
     }
-}elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+} elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
     $input = json_decode(file_get_contents("php://input"), true);
     $essay_id = intval($input['essay_id'] ?? 0);
     $title = trim($input['title'] ?? '');
@@ -103,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $content_of_presentation = trim($input['content_of_presentation'] ?? '');
     $content_of_examples = trim($input['content_of_examples'] ?? '');
     $resume_of_presentation = trim($input['resume_of_presentation'] ?? '');
-    $keywords = $input['keywords'] ?? '';
+    $keywords = trim($input['keywords'] ?? '');
     $comments = trim($input['comments'] ?? '');
 
     if (empty($essay_id) || empty($title)) {
@@ -143,7 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         echo json_encode(['status' => 'error', 'message' => 'Database error: ' . $e->getMessage()]);
         http_response_code(500);
     }
-}else {
+} else {
     echo json_encode(['status' => 'error', 'message' => 'Invalid request method.']);
     http_response_code(405);
 }

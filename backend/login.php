@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/classes/db.php';
 
-header('Content-Type: application/json'); 
+header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username'] ?? '');
@@ -30,20 +30,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'user' => [
                     'user_id' => $user['user_id'],
                     'username' => $user['username'],
-                    'user_type' => $user['user_type']
+                    'name' => $user['name'],
+                    'faculty_number' => $user['faculty_number'],
+                    'user_type' => $user['user_type'],
+                    'essay_id' => $user['essay_id'],
+                    'project_id' => $user['project_id']
                 ]
             ]);
-            http_response_code(200); 
+            http_response_code(200);
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Invalid username or password.']);
-            http_response_code(401); 
+            http_response_code(401);
         }
     } catch (PDOException $e) {
         echo json_encode(['status' => 'error', 'message' => 'Database error: ' . $e->getMessage()]);
-        http_response_code(500); 
+        http_response_code(500);
     }
 } else {
     echo json_encode(['status' => 'error', 'message' => 'Invalid request method.']);
-    http_response_code(405); 
+    http_response_code(405);
 }
 ?>

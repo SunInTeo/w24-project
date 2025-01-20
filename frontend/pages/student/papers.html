@@ -92,8 +92,8 @@
           </div>
           <div class="modal-body">
             <div class="block-container">
+              <span data-i18n="propose-topic-text"></span>
               <form id="propose-topic-form">
-                <span data-i18n="propose-topic-text"></span>
                 <div class="input-container">
                   <i class="input-icon fa-solid fa-a"></i>
                   <input
@@ -120,7 +120,11 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button class="primary" data-i18n="send-text"></button>
+            <button
+              class="primary"
+              data-i18n="send-text"
+              onclick="sendProposeTopic('Essay')"
+            ></button>
             <button
               class="secondary"
               onclick="closeModal('propose-topic-modal','propose-topic-modal-overlay');resetForm('propose-topic-form')"
@@ -160,6 +164,10 @@
       </div>
     </section>
 
+    <div id="toast" class="toast hidden">
+      <span id="toast-message"></span>
+    </div>
+
     <div class="language-toggle"></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -169,7 +177,10 @@
     <script src="../../components/javascript/input.script.js"></script>
     <script src="../../components/javascript/modal.script.js"></script>
     <script src="../../components/javascript/drawer.script.js"></script>
+    <script src="../../components/javascript/toast.script.js"></script>
+
     <script src="./javascript/papers.script.js"></script>
     <script src="../javascript/papers_common.script.js"></script>
+    <script src="../javascript/propose_topic.script.js"></script>
   </body>
 </html>

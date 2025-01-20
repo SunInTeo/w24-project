@@ -1,44 +1,19 @@
-const drawer = document.getElementById("drawer");
-const overlay = document.getElementById("drawerOverlay");
-const drawerHeader = document.querySelector(".drawer-header");
-const drawerContent = document.querySelector(".drawer-content");
-
 document.addEventListener("DOMContentLoaded", () => {
-  fetchProjects();
+  fetchProjects("admin");
   initializeListeners();
 });
 
 function initializeListeners() {
   const deleteButton = document.getElementById("delete-selected");
   if (deleteButton) {
-    deleteButton.addEventListener("click", deleteSelectedProjects);
+    deleteButton.addEventListener("click", () => {
+      openModal("confirm-modal", "confirm-modal-overlay");
+    });
   }
 
   const selectAllCheckbox = document.querySelector("#select-all");
   if (selectAllCheckbox) {
     selectAllCheckbox.addEventListener("change", handleSelectAllCheckbox);
-  }
-}
-async function fetchProjects() {
-  try {
-    const response = await fetch("/w24-project/backend/projects_admin.php", {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    });
-
-    const data = await response.json();
-    if (data.status === "success") {
-      const projectTopics = data.data.map((project) => ({
-        projectId: project.project_id,
-        projectTitle: project.title,
-      }));
-      localStorage.setItem("project_topics", JSON.stringify(projectTopics));
-      renderProjects(data.data);
-    } else {
-      console.error("Error:", data.message);
-    }
-  } catch (error) {
-    console.error("Error fetching projects:", error);
   }
 }
 
@@ -60,7 +35,7 @@ function renderProjects(projects) {
       <div class="card no-data-card">
         <div class="card-header" data-i18n="no-data-available">No Data Available</div>
         <div class="card-body">
-          No research papers are available at the moment. Please add new topics to display them here.
+          <span data-i18n="no-projects-papers"></span>
         </div>
       </div>`;
     applyTranslations();
@@ -96,11 +71,6 @@ function renderProjects(projects) {
 
     tbody.appendChild(row);
   });
-}
-
-function openReviewDrawer(data) {
-  populateDrawer(data);
-  openDrawer("drawer", "drawerOverlay");
 }
 
 function populateDrawer(data) {
@@ -157,20 +127,6 @@ function populateDrawer(data) {
   `;
 
   applyTranslations();
-}
-
-function displayErrorMessage(messageKey) {
-  const errorMessage = document.getElementById("errorMessage");
-  errorMessage.setAttribute("data-i18n", messageKey);
-  applyTranslations();
-  errorMessage.style.display = "flex";
-  setTimeout(() => hideErrorMessage(), 2000);
-}
-
-function hideErrorMessage() {
-  const errorMessage = document.getElementById("errorMessage");
-  errorMessage.removeAttribute("data-i18n");
-  errorMessage.style.display = "none";
 }
 
 function handleSelectAllCheckbox(event) {
@@ -235,13 +191,14 @@ async function createNewProject() {
     if (data.status === "success") {
       closeModal("add-topic-modal", "add-topic-modal-overlay");
       resetForm("add-topic-form");
-      fetchProjects();
+      showToast("success-creating-project-admin");
+      fetchProjects("admin");
     } else {
-      alert(data.message || "Failed to create project.");
+      showErrorMessage(data.message || "Failed to create project.");
     }
   } catch (error) {
     console.error("Error creating project:", error);
-    alert("An error occurred. Please try again later.");
+    showToast("error-creating-project-admin", "error");
   }
 }
 async function editProject() {
@@ -290,14 +247,15 @@ async function editProject() {
     const data = await response.json();
 
     if (data.status === "success") {
-      fetchProjects();
+      showToast("success-editing-project-admin");
+      fetchProjects("admin");
       closeDrawer();
     } else {
       showErrorModal(data.message || "Failed to update project.");
     }
   } catch (error) {
     console.error("Error updating project:", error);
-    showErrorModal("An error occurred. Please try again later.");
+    showToast("error-editing-project-admin", "error");
   }
 }
 
@@ -331,11 +289,15 @@ async function deleteSelectedProjects() {
       });
       document.querySelector("#select-all").checked = false;
       updateRemoveButtonState();
+      showToast("success-deleting-projects-admin");
     } else {
       showErrorModal(data.message || "Failed to delete selected projects.");
     }
   } catch (error) {
     console.error("Error deleting projects:", error);
+    showToast("error-deleting-projects-admin", "error");
+  } finally {
+    closeModal("confirm-modal", "confirm-modal-overlay");
   }
 }
 
@@ -417,13 +379,6 @@ function searchByProject() {
   const projectDropdown = document.getElementById("topic-dropdown");
   const selectedProjectId = projectDropdown.value;
 
-  if (!selectedProjectId) {
-    alert("Please select a project.");
-    return;
-  }
-
-  console.log(`Selected Project ID: ${selectedProjectId}`);
-
   fetchTeamsByProjectId(selectedProjectId);
 }
 
@@ -443,11 +398,9 @@ async function fetchTeamsByProjectId(projectId) {
 
     if (data.status === "success") {
       if (data.data && data.data.length > 0) {
-        console.log("Teams for Project:", data.data);
-        displayTeams(data.data); // Call a function to display teams in the UI
+        displayTeams(data.data);
       } else {
-        console.log("No teams found for this project.");
-        displayNoTeamsMessage(); // Display a message for no teams
+        displayNoTeamsMessage();
       }
     } else {
       console.error("Error fetching teams:", data.message);
@@ -455,11 +408,14 @@ async function fetchTeamsByProjectId(projectId) {
     }
   } catch (error) {
     console.error("Error fetching teams:", error);
+    showToast("error-fetching-teams-admin", "error");
   }
 }
 
 function displayTeams(teams) {
   const teamsContainer = document.getElementById("teams");
+  teamsContainer.classList.remove("no-data");
+
   teamsContainer.style.display = "block";
   teamsContainer.innerHTML = "";
 
@@ -467,41 +423,47 @@ function displayTeams(teams) {
   accordion.classList.add("accordion");
 
   teams.forEach((team) => {
-    const teamMembers = team.team_members.replace(/,/g, ", ");
+    const teamMembers = team.team_members.split(",");
+    const formattedMembers = teamMembers.join(", ");
+
     const accordionItem = document.createElement("div");
     accordionItem.classList.add("accordion-item");
 
+    let distributionList = "";
+    teamMembers.forEach((_, index) => {
+      const distributionKey = `sample_distribution_${index + 1}`;
+      distributionList += `<li><strong><span data-i18n="member-${
+        index + 1
+      }"></span></strong> ${team[distributionKey] || "-"}</li>`;
+    });
+
     accordionItem.innerHTML = `
       <div class="accordion-header" onclick="toggleAccordion(this)">
-        <h4>${teamMembers}</h4>
+        <h4>${formattedMembers}</h4>
         <span class="accordion-icon">+</span>
       </div>
       <div class="accordion-content">
-        <p><strong>Comments:</strong> ${
-          team.team_comments || "No comments available."
+        <p><strong> <span data-i18n="comments-team"></span></strong> ${
+          team.team_comments || "-"
         }</p>
-        <p><strong>Distribution:</strong></p>
-        <ul>
-          <li>${team.sample_distribution_1 || "Not specified"}</li>
-          <li>${team.sample_distribution_2 || "Not specified"}</li>
-          <li>${team.sample_distribution_3 || "Not specified"}</li>
-        </ul>
+        <p><strong><span data-i18n="distribution-team"></span></strong></p>
+        <ul>${distributionList}</ul>
       </div>
     `;
 
     accordion.appendChild(accordionItem);
   });
-
   teamsContainer.appendChild(accordion);
+  applyTranslations();
 }
 
-// Example function to display a no teams message
 function displayNoTeamsMessage() {
-  const teamsContainer = document.getElementById("teams-container");
+  const teamsContainer = document.getElementById("teams");
+  teamsContainer.classList.add("no-data");
+
   teamsContainer.innerHTML = "<p>No teams available for this project.</p>";
 }
 
-// Example function to display an error message
 function displayErrorMessage(message) {
   const errorContainer = document.getElementById("error-container");
   errorContainer.textContent = message;
@@ -511,3 +473,4 @@ function displayErrorMessage(message) {
     errorContainer.style.display = "none";
   }, 5000);
 }
+

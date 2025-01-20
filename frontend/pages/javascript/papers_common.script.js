@@ -29,10 +29,12 @@ async function fetchResearchPapers(endpoint) {
       renderTable(sortedData);
     } else {
       console.error("Error fetching research papers:", data.message);
+      showToast("error-fetching");
     }
     tableContainer.style.display = "block";
   } catch (error) {
     console.error("Error fetching research papers:", error);
+    showToast("error-fetching");
   } finally {
     spinner.style.display = "none";
   }

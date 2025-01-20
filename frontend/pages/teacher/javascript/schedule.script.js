@@ -1,223 +1,69 @@
-const sampleDays = [
-  "18.12.2024",
-  "19.12.2024",
-  "06.01.2025",
-  "07.01.2025",
-  "08.01.2025",
-  "09.01.2025",
-  "10.01.2025",
-  "11.01.2025",
-  "12.01.2025",
-  "13.01.2025",
-];
+async function fetchPresentationDays() {
+  try {
+    const response = await fetch("/w24-project/backend/schedule_admin.php", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
 
-const Day1 = [
-  {
-    time: "08:00",
-    facultyNumber: "88282",
-    studentName: "John Doe",
-    studentGroup: 3,
-    topicNumber: 1,
-    topicName: "Introduction to Programming",
-  },
-  {
-    time: "08:10",
-    facultyNumber: "88283",
-    studentName: "Jane Smith",
-    studentGroup: 3,
-    topicNumber: 2,
-    topicName: "Advanced Mathematics",
-  },
-  {
-    time: "08:20",
-    facultyNumber: "88284",
-    studentName: "Alice Johnson",
-    studentGroup: 2,
-    topicNumber: 3,
-    topicName: "Data Structures",
-  },
-  {
-    time: "08:30",
-    facultyNumber: "88285",
-    studentName: "Bob Brown",
-    studentGroup: 4,
-    topicNumber: 4,
-    topicName: "Operating Systems",
-  },
-  {
-    time: "10:00",
-    facultyNumber: "88286",
-    studentName: "Charlie Davis",
-    studentGroup: 1,
-    topicNumber: 5,
-    topicName: "Machine Learning Basics",
-  },
-  {
-    time: "08:50",
-    facultyNumber: "88287",
-    studentName: "Diana Green",
-    studentGroup: 2,
-    topicNumber: 6,
-    topicName: "Cybersecurity Fundamentals",
-  },
-  {
-    time: "09:00",
-    facultyNumber: "88288",
-    studentName: "Edward Hall",
-    studentGroup: 5,
-    topicNumber: 7,
-    topicName: "Introduction to Databases",
-  },
-  {
-    time: "10:20",
-    facultyNumber: "88289",
-    studentName: "Fiona Gray",
-    studentGroup: 3,
-    topicNumber: 8,
-    topicName: "Web Development Basics",
-  },
-  {
-    time: "09:20",
-    facultyNumber: "88290",
-    studentName: "George White",
-    studentGroup: 1,
-    topicNumber: 9,
-    topicName: "Computer Networks",
-  },
-  {
-    time: "09:30",
-    facultyNumber: "88291",
-    studentName: "Helen Black",
-    studentGroup: 4,
-    topicNumber: 10,
-    topicName: "Artificial Intelligence Overview",
-  },
-  {
-    time: "09:40",
-    facultyNumber: "88292",
-    studentName: "Ian Wright",
-    studentGroup: 2,
-    topicNumber: 11,
-    topicName: "Discrete Mathematics",
-  },
-  {
-    time: "09:50",
-    facultyNumber: "88293",
-    studentName: "Julia Brown",
-    studentGroup: 5,
-    topicNumber: 12,
-    topicName: "Mobile Application Development",
-  },
-];
+    const data = await response.json();
+    if (data.status === "success") {
+      renderPresentationDays(data.data);
 
-const Day2 = [
-  {
-    time: "10:00",
-    facultyNumber: "88284",
-    studentName: "Alice Brown",
-    studentGroup: 2,
-    topicNumber: 3,
-    topicName: "Data Structures",
-  },
-  {
-    time: "11:00",
-    facultyNumber: "88285",
-    studentName: "Bob Martin",
-    studentGroup: 2,
-    topicNumber: 4,
-    topicName: "Operating Systems",
-  },
-];
+      return data.data;
+    } else {
+      console.error("Error:", data.message);
+      return [];
+    }
+  } catch (error) {
+    console.error("Error fetching presentation days:", error);
+    return [];
+  }
+}
+document.addEventListener("DOMContentLoaded", async function () {
+  const days = await fetchPresentationDays();
+  if (days.length > 0) {
+    showDayData(days[0].day_id);
+    assignButtonActiveClass(0);
+  }
+});
 
-const Day3 = [
-  {
-    time: "09:00",
-    facultyNumber: "88286",
-    studentName: "Chris Johnson",
-    studentGroup: 1,
-    topicNumber: 5,
-    topicName: "Database Management",
-  },
-  {
-    time: "10:30",
-    facultyNumber: "88287",
-    studentName: "Diana Scott",
-    studentGroup: 1,
-    topicNumber: 6,
-    topicName: "Machine Learning",
-  },
-];
-
-const Day4 = [
-  {
-    time: "14:00",
-    facultyNumber: "88288",
-    studentName: "Eve Wilson",
-    studentGroup: 4,
-    topicNumber: 7,
-    topicName: "Artificial Intelligence",
-  },
-  {
-    time: "15:00",
-    facultyNumber: "88289",
-    studentName: "Frank White",
-    studentGroup: 4,
-    topicNumber: 8,
-    topicName: "Cybersecurity",
-  },
-];
-
-const Day5 = [
-  {
-    time: "13:00",
-    facultyNumber: "88290",
-    studentName: "Grace Lee",
-    studentGroup: 5,
-    topicNumber: 9,
-    topicName: "Cloud Computing",
-  },
-  {
-    time: "14:30",
-    facultyNumber: "88291",
-    studentName: "Hank Moore",
-    studentGroup: 5,
-    topicNumber: 10,
-    topicName: "Web Development",
-  },
-];
-
-const Day6 = [
-  {
-    time: "11:00",
-    facultyNumber: "88292",
-    studentName: "Ivy Taylor",
-    studentGroup: 6,
-    topicNumber: 11,
-    topicName: "Mobile Application Development",
-  },
-  {
-    time: "12:00",
-    facultyNumber: "88293",
-    studentName: "Jake Harris",
-    studentGroup: 6,
-    topicNumber: 12,
-    topicName: "Computer Networks",
-  },
-];
-
-const dayData = [Day1, Day2, Day3, Day4, Day5, Day6];
-let dateIndexInDays = -1;
-document.addEventListener("DOMContentLoaded", function () {
+function renderPresentationDays(days) {
   const daysContainer = document.getElementById("days");
+  daysContainer.innerHTML = "";
 
-  sampleDays.forEach((day, index) => {
+  if (!days || days.length === 0) {
+    daysContainer.innerHTML = `<p data-i18n="no-data-available"></p>`;
+    applyTranslations();
+    return;
+  }
+
+  days.forEach((day, index) => {
     const button = document.createElement("button");
-    button.textContent = day;
+    button.textContent = `${day.day_date} (${day.presentation_type})`;
     button.classList.add("day-button");
-    button.onclick = () => showDayData(index);
+
+    button.onclick = () => {
+      showDayData(day.day_id);
+      assignButtonActiveClass(index);
+    };
+
     daysContainer.appendChild(button);
   });
-});
+
+  applyTranslations();
+}
+
+function assignButtonActiveClass(index) {
+  const buttons = document.querySelectorAll(".day-button");
+
+  buttons.forEach((btn, idx) => {
+    if (idx === index) {
+      btn.classList.add("active");
+    } else {
+      btn.classList.remove("active");
+    }
+  });
+}
 
 function sortDays(data) {
   return data.slice().sort((a, b) => {
@@ -227,87 +73,210 @@ function sortDays(data) {
   });
 }
 
-function assignButtonActiveClass(dayIndex) {
-  const btn = document.getElementsByTagName("button");
-  btn[dayIndex + 2].classList.add("active");
-  for (let i = 2; i < btn.length; i++) {
-    if (i !== dayIndex + 2) {
-      btn[i].classList.remove("active");
-    }
-  }
-}
-function showDayData(dayIndex) {
-  assignButtonActiveClass(dayIndex);
-
-  dateIndexInDays = dayIndex;
-  const timetableContainer = document.getElementById("timetable");
-  const data = dayData[dayIndex];
-
-  if (!data) {
-    timetableContainer.innerHTML = `<div class="timetable-card-container">
-        <div class="card">
-            <div class="card-header"><span data-i18n="hey"></span></div>
-              <div class="card-body">
-                  <span data-i18n="info-no-data-available-for-day-admin"></span>
-            </div>
-
-        </div>
-      </div> </div>`;
-    applyTranslations();
+async function fetchUsersPresentationsByDay(dayDate, presentationType, dayId) {
+  if (!dayDate || !presentationType) {
+    console.error("Day date and presentation type are required.");
     return;
   }
-  const sortedData = sortDays(data);
+
+  try {
+    const response = await fetch(
+      `/w24-project/backend/fetch_schedule_by_day.php?day_date=${encodeURIComponent(
+        dayDate
+      )}&presentation_type=${encodeURIComponent(presentationType)}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const data = await response.json();
+
+    if (data.status === "success") {
+      renderDayData(data.users, dayId);
+    } else {
+      console.error("Error fetching users:", data.message);
+      showToast("error-fetching-day", "error");
+    }
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    showToast("error-fetching-day", "error");
+  }
+}
+
+async function showDayData(dayId) {
+  assignButtonActiveClass(dayId);
+
+  try {
+    const response = await fetch(
+      `/w24-project/backend/schedule_admin.php?day_id=${dayId}`
+    );
+    const data = await response.json();
+
+    if (data.status !== "success") {
+      throw new Error("Failed to fetch presentation day data.");
+    }
+
+    fetchUsersPresentationsByDay(
+      data.data.day_date,
+      data.data.presentation_type,
+      dayId
+    );
+  } catch (error) {
+    console.error("Error fetching day data:", error);
+    document.getElementById("timetable").innerHTML = `
+      <div class="timetable-card-container">
+        <div class="card">
+          <div class="card-header"><span data-i18n="hey"></span></div>
+          <div class="card-body">
+            <span data-i18n="info-no-data-available-for-day-admin"></span>
+          </div>
+        </div>
+      </div>`;
+    applyTranslations();
+  }
+}
+
+function renderDayData(dayData, dayId) {
+  const timetableContainer = document.getElementById("timetable");
 
   let tableHTML = `
-   <div class="flex-container page-actions" id="page-actions">
-          <button
-            class="download-table-button"
-            onclick="downloadTableAsExcel('timetable')"
-            data-i18n="download-xlsx"
-          ></button>
-          <button
-            class="delete-button small"
-            onclick="deleteDay()"
-            data-i18n="delete-timetable"
-          ></button>
-          
-        </div>
-          <div class="table-container">
-    <table border="1" style="width: 100%; border-collapse: collapse;" class="table" id="timetable">
-      <thead>
-        <tr>
-          <th data-i18n="hour"></th>
-          <th data-i18n="faculty-number-placeholder-team"></th>
-          <th data-i18n="student-name-placeholder-team"></th>
-          <th data-i18n="group"></th>
-          <th data-i18n="table-topic-number"></th>
-          <th data-i18n="table-topic-name"></th>
-        </tr>
-      </thead>
-      <tbody>
+    <div class="flex-container page-actions" id="page-actions">
   `;
 
-  sortedData.forEach((entry) => {
+  if (dayData && dayData.length > 0) {
     tableHTML += `
-      <tr>
-        <td>${entry.time}</td>
-        <td>${entry.facultyNumber}</td>
-        <td>${entry.studentName}</td>
-        <td>${entry.studentGroup}</td>
-        <td>${entry.topicNumber}</td>
-        <td>${entry.topicName}</td>
-      </tr>
+      <button
+        class="download-table-button"
+        onclick="downloadTableAsExcel('timetable')"
+        data-i18n="download-xlsx"
+      ></button>
     `;
-  });
+  }
 
   tableHTML += `
-      </tbody>
-    </table>
+      <button
+        class="delete-button small"
+        onclick="confirmDeleteSelectedDay(${dayId})"
+        data-i18n="delete-timetable"
+      ></button>
     </div>
   `;
 
+  if (!dayData || dayData.length === 0) {
+    tableHTML += `
+      <div class="timetable-card-container">
+        <div class="card">
+          <div class="card-header"><span data-i18n="hey"></span></div>
+          <div class="card-body">
+            <span data-i18n="info-no-data-available-for-day-admin"></span>
+          </div>
+        </div>
+      </div>`;
+  } else {
+    dayData.sort((a, b) => {
+      return a.presentation_time.localeCompare(b.presentation_time);
+    });
+    const groupedData = dayData.reduce((acc, entry) => {
+      if (!acc[entry.presentation_time]) {
+        acc[entry.presentation_time] = {
+          presentation_time: entry.presentation_time,
+          faculty_numbers: [],
+          student_names: [],
+          presentation_id: entry.presentation_id,
+          presentation_title: entry.presentation_title,
+        };
+      }
+      acc[entry.presentation_time].faculty_numbers.push(entry.faculty_number);
+      acc[entry.presentation_time].student_names.push(entry.name);
+      return acc;
+    }, {});
+
+    tableHTML += `
+      <div class="table-container">
+        <table border="1" style="width: 100%; border-collapse: collapse;" class="table" id="timetable">
+          <thead>
+            <tr>
+              <th data-i18n="hour"></th>
+              <th data-i18n="faculty-number-placeholder-team"></th>
+              <th data-i18n="student-name-placeholder-team"></th>
+              <th data-i18n="table-topic-number"></th>
+              <th data-i18n="table-topic-name"></th>
+            </tr>
+          </thead>
+          <tbody>
+    `;
+
+    Object.values(groupedData).forEach((entry) => {
+      tableHTML += `
+        <tr>
+          <td>${entry.presentation_time}</td>
+          <td>${entry.faculty_numbers.join(", ")}</td>
+          <td>${entry.student_names.join(", ")}</td>
+          <td>${entry.presentation_id}</td>
+          <td>${entry.presentation_title}</td>
+        </tr>
+      `;
+    });
+
+    tableHTML += `
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
+
   timetableContainer.innerHTML = tableHTML;
   applyTranslations();
+}
+
+function confirmDeleteSelectedDay(dayId) {
+  openModal("confirm-modal", "confirm-modal-overlay");
+  const confirmButton = document.getElementById("confirm");
+  confirmButton.onclick = () => {
+    deleteDay(dayId);
+  };
+}
+async function deleteDay(dayId) {
+  try {
+    const response = await fetch("/w24-project/backend/schedule_admin.php", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ day_id: dayId }),
+    });
+
+    const data = await response.json();
+
+    if (data.status === "success") {
+      showToast("success-deleting-day");
+      fetchPresentationDays();
+
+      document.querySelectorAll(".day-button").forEach((btn) => {
+        btn.classList.remove("active");
+      });
+
+      document.getElementById("timetable").innerHTML = `
+         <div class="timetable-card-container">
+           <div class="card">
+             <div class="card-header"><span data-i18n="hey"></span></div>
+             <div class="card-body">
+               <span data-i18n="info-please-select-day"></span>
+             </div>
+           </div>
+         </div>`;
+
+      applyTranslations();
+    } else {
+      showToast("error-deleting-day", "error");
+    }
+  } catch (error) {
+    console.error("Error deleting presentation day:", error);
+    showToast("error-deleting-day", "error");
+  } finally {
+    closeModal("confirm-modal", "confirm-modal-overlay");
+  }
 }
 
 function downloadTableAsExcel(tableID) {
@@ -337,11 +306,73 @@ function downloadTableAsExcel(tableID) {
   ];
   worksheet["!cols"] = columnWidths;
 
-  XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Schedule");
 
-  XLSX.writeFile(workbook, `timetable_day${sampleDays[dateIndexInDays]}.xlsx`);
+  XLSX.writeFile(workbook, `presentation_day_${tableID}.xlsx`);
 }
 
 function openAddToTimetableModal(modalID, modalOverlayID) {
   openModal(modalID, modalOverlayID);
+}
+
+async function saveDay() {
+  const dayInput = document.getElementById("dayInput").value;
+  const startTimeInput = document.getElementById("startTimeInput").value;
+  const intervalsInput = document.getElementById("intervalsInput").value;
+  const endTimeInput = document.getElementById("endtimeInput").value;
+
+  if (!dayInput || !startTimeInput || !intervalsInput || !endTimeInput) {
+    displayErrorMessage("Please fill in all fields correctly.");
+    return;
+  }
+
+  const timeslotData = {
+    day_date: dayInput,
+    start_time: startTimeInput,
+    end_time: endTimeInput,
+    interval_count: parseInt(intervalsInput, 10),
+    presentation_type:
+      document.querySelector('input[name="presentationType"]:checked')?.value ||
+      "Essay",
+  };
+
+  try {
+    const response = await fetch("/w24-project/backend/schedule_admin.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(timeslotData),
+    });
+
+    const data = await response.json();
+
+    if (data.status === "success") {
+      showToast("success-adding-day");
+
+      const days = await fetchPresentationDays();
+      const newDayIndex = days.findIndex((day) => day.day_date === dayInput);
+
+      if (newDayIndex !== -1) {
+        showDayData(days[newDayIndex].day_id);
+        assignButtonActiveClass(newDayIndex);
+      }
+    } else {
+      showToast("error-adding-day", "error");
+    }
+  } catch (error) {
+    console.error("Error adding timeslot:", error);
+    showToast("error-adding-day", "error");
+  } finally {
+    closeModal("add-timeslot-modal", "add-timeslot-modal-overlay");
+    resetForm("add-timeslot-form");
+  }
+}
+
+function displayErrorMessage(message) {
+  const errorContainer = document.createElement("div");
+  errorContainer.classList.add("toast", "error", "show");
+  errorContainer.textContent = message;
+  document.body.appendChild(errorContainer);
+  setTimeout(() => errorContainer.remove(), 3000);
 }

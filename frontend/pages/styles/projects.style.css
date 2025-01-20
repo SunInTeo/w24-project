@@ -98,6 +98,12 @@
 }
 
 #teams {
-  height: 150px;
-  overflow-y: scroll;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.no-data {
+  margin: auto;
+  width: 50%;
+  text-align: center;
 }
