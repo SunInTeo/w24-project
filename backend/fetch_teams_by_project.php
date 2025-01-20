@@ -7,10 +7,8 @@ try {
     $method = $_SERVER['REQUEST_METHOD'];
 
     if ($method === 'GET') {
-        // Check if project_id is provided
         $project_id = intval($_GET['project_id'] ?? 0);
         if ($project_id > 0) {
-            // Fetch all teams for the given project ID
             $stmt = $pdo->prepare("
                 SELECT 
                     t.team_id,
@@ -35,7 +33,6 @@ try {
 
             echo json_encode(['status' => 'success', 'data' => $teams]);
         } else {
-            // Check if user_id is provided
             $user_id = intval($_GET['user_id'] ?? 0);
             if ($user_id === 0) {
                 echo json_encode(['status' => 'error', 'message' => 'Either project ID or user ID is required.']);
@@ -43,7 +40,6 @@ try {
                 exit;
             }
 
-            // Fetch the user's team
             $stmt = $pdo->prepare("
                 SELECT 
                     t.team_id,

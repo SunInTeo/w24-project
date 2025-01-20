@@ -19,22 +19,16 @@
     <main>
       <div class="container">
         <div class="main-container">
-          <div class="days-container block-container" id="days">
+          <div class="days-container block-container">
             <button
               class="propose-button"
               data-i18n="add-time-slot"
               onclick="openAddToTimetableModal('add-timeslot-modal','add-timeslot-modal-overlay')"
             ></button>
+            <div id="days"></div>
           </div>
           <div class="timetable-container" id="timetable">
-            <div class="timetable-card-container">
-              <div class="card">
-                <div class="card-header"><span data-i18n="hey"></span></div>
-                <div class="card-body">
-                  <span data-i18n="info-please-selecct-day"></span>
-                </div>
-              </div>
-            </div>
+            <div class="timetable-card-container"></div>
           </div>
         </div>
       </div>
@@ -70,8 +64,8 @@
           </div>
           <div class="input-row">
             <div class="input-container">
-              <label for="dayInput" data-i18n="delay"></label>
-              <input type="number" min="1" id="delayInput" />
+              <label for="dayInput" data-i18n="number-of-intervals"></label>
+              <input type="number" min="1" id="intervalsInput" />
             </div>
             <div class="input-container">
               <label for="dayInput" data-i18n="end-time"></label>
@@ -83,16 +77,79 @@
               />
             </div>
           </div>
+          <div>
+            <label data-i18n="presentation-type"></label>
+            <div class="radio-container">
+              <input
+                type="radio"
+                name="presentationType"
+                value="Essay"
+                class="radio-option"
+                checked
+              /><label>
+                <span data-i18n="essays"></span>
+              </label>
+              <input
+                type="radio"
+                name="presentationType"
+                value="Project"
+                class="radio-option"
+              /><label>
+                <span data-i18n="projects"></span>
+              </label>
+            </div>
+          </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button class="primary" data-i18n="save-text"></button>
+        <button
+          class="primary"
+          data-i18n="save-text"
+          onclick="saveDay()"
+        ></button>
         <button
           class="secondary"
           data-i18n="cancel-text"
           onclick="closeModal('add-timeslot-modal','add-timeslot-modal-overlay');resetForm('add-timeslot-form')"
         ></button>
       </div>
+    </div>
+
+    <section>
+      <div
+        class="modal-overlay"
+        id="confirm-modal-overlay"
+        style="display: none"
+      ></div>
+      <div class="modal" id="confirm-modal" style="display: none">
+        <div class="modal-header">
+          <span data-i18n="confirm-modal-header"></span>
+          <button
+            class="modal-close-button"
+            aria-label="Close modal"
+            onclick="closeModal('confirm-modal', 'confirm-modal-overlay')"
+          >
+            &times;
+          </button>
+        </div>
+        <div class="modal-body">
+          <span data-i18n="confirm-modal-message"></span>
+        </div>
+        <div class="modal-footer">
+          <button class="primary" id="confirm" onclick="deleteSelectedDay()">
+            Ok
+          </button>
+          <button
+            class="secondary"
+            onclick="closeModal('confirm-modal','confirm-modal-overlay')"
+            data-i18n="cancel-text"
+          ></button>
+        </div>
+      </div>
+    </section>
+
+    <div id="toast" class="toast hidden">
+      <span id="toast-message"></span>
     </div>
 
     <div class="language-toggle"></div>
@@ -103,6 +160,7 @@
 
     <script src="../../components/javascript/input.script.js"></script>
     <script src="../../components/javascript/modal.script.js"></script>
+    <script src="../../components/javascript/toast.script.js"></script>
     <script src="./javascript/schedule.script.js"></script>
   </body>
 </html>

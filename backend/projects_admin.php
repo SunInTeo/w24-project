@@ -5,11 +5,9 @@ header('Content-Type: application/json');
 
 try {
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-        // Check if project_id is provided for search
         $project_id = isset($_GET['project_id']) ? intval($_GET['project_id']) : 0;
 
         if ($project_id > 0) {
-            // Fetch teams and participants for a specific project
             $stmt = $pdo->prepare("
                 SELECT 
                     t.team_id,
@@ -34,7 +32,6 @@ try {
 
             echo json_encode(['status' => 'success', 'data' => $teams]);
         } else {
-            // Fetch all projects with basic details
             $stmt = $pdo->query("
                 SELECT 
                     project_id,
@@ -53,8 +50,7 @@ try {
 
             echo json_encode(['status' => 'success', 'data' => $projects]);
         }
-    }  elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
-        // Edit a project and/or its teams
+    } elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
         $input = json_decode(file_get_contents("php://input"), true);
         $project_id = intval($input['project_id'] ?? 0);
         $title = trim($input['title'] ?? '');
@@ -110,7 +106,6 @@ try {
             $users_on_team = $team['users_on_team'] ?? [];
 
             if ($team_id > 0) {
-                // Update existing team
                 $stmt = $pdo->prepare("
                     UPDATE Teams
                     SET team_comments = :team_comments,
@@ -127,7 +122,6 @@ try {
                     'team_id' => $team_id,
                 ]);
 
-                // Update team members
                 $stmt = $pdo->prepare("DELETE FROM TeamMembers WHERE team_id = :team_id");
                 $stmt->execute(['team_id' => $team_id]);
 
@@ -159,7 +153,7 @@ try {
 
         echo json_encode(['status' => 'success', 'message' => 'Projects deleted successfully.']);
         http_response_code(200);
-    }elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $input = json_decode(file_get_contents("php://input"), true);
         $title = trim($input['title'] ?? '');
         $description = trim($input['description'] ?? '');

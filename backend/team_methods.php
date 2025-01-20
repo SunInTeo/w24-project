@@ -7,7 +7,6 @@ try {
     $method = $_SERVER['REQUEST_METHOD'];
 
     if ($method === 'GET') {
-        // Retrieve the user's team based on their user_id
         $user_id = intval($_GET['user_id'] ?? 0);
         if ($user_id === 0) {
             echo json_encode(['status' => 'error', 'message' => 'User ID is required.']);
@@ -15,7 +14,6 @@ try {
             exit;
         }
 
-        // Fetch the team details for the user
         $stmt = $pdo->prepare("
             SELECT 
                 t.team_id,

@@ -1,16 +1,14 @@
-const drawer = document.getElementById("drawer");
-const overlay = document.getElementById("drawerOverlay");
-const drawerHeader = document.querySelector(".drawer-header");
-const drawerContent = document.querySelector(".drawer-content");
-
 const registerTeamButton = document.querySelector(".register-team-button");
 const editTeamButton = document.querySelector(".edit-team-button");
 const pageActionsContainer = document.getElementById("page-actions");
 
 function setUserInLocalStorage(key, value) {
   if (key === "project" && value.topicNumber) {
-    // Spread team details directly into the project
-    const flattenedValue = { topicNumber: value.topicNumber, ...value };
+    const flattenedValue = {
+      topicNumber: value.topicNumber,
+      team_id: value.team_id,
+      ...value,
+    };
     localStorage.setItem(key, JSON.stringify(flattenedValue));
     const isProjectStored = Boolean(flattenedValue);
     createActionButtons(isProjectStored, pageActionsContainer);
@@ -19,28 +17,12 @@ function setUserInLocalStorage(key, value) {
   }
 }
 
-async function fetchProjects() {
-  try {
-    const response = await fetch("/w24-project/backend/projects_student.php", {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    });
-
-    const data = await response.json();
-    if (data.status === "success") {
-      const projectTopics = data.data.map((project) => ({
-        projectId: project.project_id,
-        projectTitle: project.title,
-      }));
-      localStorage.setItem("project_topics", JSON.stringify(projectTopics));
-      renderProjects(data.data);
-    } else {
-      console.error("Error:", data.message);
-    }
-  } catch (error) {
-    console.error("Error fetching projects:", error);
-  }
+function deleteProjectFromLocalStorage() {
+  localStorage.removeItem("project");
+  const isProjectStored = Boolean(JSON.parse(localStorage.getItem("project")));
+  createActionButtons(isProjectStored, pageActionsContainer);
 }
+
 function renderProjects(projects) {
   const table = document.querySelector("#project_topics");
   if (!table) {
@@ -59,7 +41,7 @@ function renderProjects(projects) {
       <div class="card no-data-card">
         <div class="card-header" data-i18n="no-data-available">No Data Available</div>
         <div class="card-body">
-          No research papers are available at the moment. Please add new topics to display them here.
+          <span data-i18n="no-projects-papers"></span>
         </div>
       </div>`;
     applyTranslations();
@@ -94,7 +76,7 @@ function renderProjects(projects) {
 document.addEventListener("DOMContentLoaded", () => {
   const isProjectStored = Boolean(localStorage.getItem("project"));
   createActionButtons(isProjectStored, pageActionsContainer);
-  fetchProjects();
+  fetchProjects("student");
   fetchUserTeam();
 });
 
@@ -143,11 +125,6 @@ function createActionButtons(isProjectStored, container) {
   }
 
   applyTranslations();
-}
-
-function openReviewDrawer(data) {
-  populateDrawer(data);
-  openDrawer("drawer", "drawerOverlay");
 }
 
 function populateDrawer(data) {
@@ -206,20 +183,6 @@ function populateTopicDropdown(id) {
     option.textContent = `${project.projectId} - ${project.projectTitle}`;
     topicDropdown.appendChild(option);
   });
-}
-
-function displayErrorMessage(messageKey) {
-  const errorMessage = document.getElementById("errorMessage");
-  errorMessage.setAttribute("data-i18n", messageKey);
-  applyTranslations();
-  errorMessage.style.display = "flex";
-  setTimeout(() => hideErrorMessage(), 2000);
-}
-
-function hideErrorMessage() {
-  const errorMessage = document.getElementById("errorMessage");
-  errorMessage.removeAttribute("data-i18n");
-  errorMessage.style.display = "none";
 }
 
 function addTeammateRow(containerId, editFieldsId = null) {
@@ -329,7 +292,7 @@ function openEditTeamModal() {
 
   populateTopicDropdown("topic-edit-dropdown");
   topicDropdown.value = project.topicNumber;
-
+  topicDropdown.disabled = true;
   teammatesContainer.innerHTML = "";
   project.members.forEach((member) => {
     const teammateRow = document.createElement("div");
@@ -446,12 +409,15 @@ async function assignTeamToProject(projectId, teamDetails) {
         topicNumber: projectId,
         ...teamDetails,
       });
-      fetchProjects();
+      showToast("success-assign-team");
+      fetchUserTeam();
+      fetchProjects("student");
     } else {
-      showErrorModal(data.message || "Failed to assign team.");
+      showErrorModal(data.message);
     }
   } catch (error) {
     console.error("Error assigning team:", error);
+    showToast("error-assign-team", "error");
   }
 }
 
@@ -470,12 +436,14 @@ async function editTeamDetails(projectId, updatedDetails) {
 
     const data = await response.json();
     if (data.status === "success") {
-      fetchProjects(); // Refresh the project list
+      fetchProjects("student");
+      showToast("success-project-team-edit");
     } else {
       showErrorModal(data.message || "Failed to update team details.");
     }
   } catch (error) {
     console.error("Error updating team details:", error);
+    showToast("error-project-team-edit", "error");
   }
 }
 
@@ -503,7 +471,6 @@ function saveTeamDetails() {
 
   const team = { members: teamDetails, comments: "" };
 
-  // Call assignTeamToProject
   assignTeamToProject(selectedTopic, team);
 
   closeModal("register-team-modal", "register-team-modal-overlay");
@@ -541,6 +508,7 @@ function saveEditTeamDetails() {
 
   const updatedProject = {
     topicNumber: selectedTopic,
+    team_id: JSON.parse(localStorage.getItem("project")).team_id,
     members: teamDetails,
     sample_distribution_1,
     sample_distribution_2,
@@ -548,7 +516,6 @@ function saveEditTeamDetails() {
     comments,
   };
 
-  // Call editTeamDetails
   editTeamDetails(selectedTopic, {
     members: teamDetails,
     sample_distribution_1,
@@ -557,7 +524,6 @@ function saveEditTeamDetails() {
     comments,
   });
 
-  // Save to localStorage
   setUserInLocalStorage("project", updatedProject);
 
   closeModal("edit-team-modal", "edit-team-modal-overlay");
@@ -587,6 +553,7 @@ async function fetchUserTeam() {
       if (data.data) {
         const updatedProject = {
           topicNumber: data.data.project_id,
+          team_id: data.data.team_id,
           members: data.data.team_members.split(",").map((member) => ({
             faculty_number: member.trim(),
           })),
@@ -598,7 +565,7 @@ async function fetchUserTeam() {
 
         setUserInLocalStorage("project", updatedProject);
       } else {
-        localStorage.removeItem("project"); // Clear project data if no team
+        localStorage.removeItem("project");
       }
     } else {
       console.error("Error fetching user's team:", data.message);
@@ -608,5 +575,37 @@ async function fetchUserTeam() {
     }
   } catch (error) {
     console.error("Error fetching user's team:", error);
+  }
+}
+
+async function deleteTeam() {
+  const teamId = JSON.parse(localStorage.getItem("project")).team_id;
+  if (!teamId) {
+    showErrorModal("Team ID is required.");
+    return;
+  }
+
+  try {
+    const response = await fetch("/w24-project/backend/projects_student.php", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ team_id: teamId }),
+    });
+
+    const data = await response.json();
+
+    if (data.status === "success") {
+      fetchProjects("student");
+      deleteProjectFromLocalStorage();
+      showToast("success-deleting-team");
+    } else {
+      showErrorModal(data.message || "Failed to delete team.");
+    }
+  } catch (error) {
+    console.error("Error deleting team:", error);
+    showToast("error-deleting-team", "error");
+  } finally {
+    closeModal("edit-team-modal", "edit-team-modal-overlay");
+    closeModal("confirm-modal", "confirm-modal-overlay");
   }
 }

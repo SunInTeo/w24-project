@@ -44,6 +44,16 @@ button.disabled {
   opacity: 0.6;
 }
 
+button.delete {
+  color: white;
+  background-color: rgb(176, 31, 31);
+}
+button.delete:hover {
+  color: white;
+  background-color: rgb(176, 31, 31);
+}
+
+
 /* Radio Button Component */
 .radio-container {
   display: flex;

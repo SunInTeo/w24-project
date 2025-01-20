@@ -27,7 +27,7 @@ function renderTable(data) {
       <div class="card no-data-card">
         <div class="card-header" data-i18n="no-data-available">No Data Available</div>
         <div class="card-body">
-          No research papers are available at the moment. Please add new topics to display them here.
+          <span data-i18n="no-research-papers"></span>
         </div>
       </div>`;
     applyTranslations();
@@ -135,8 +135,6 @@ document
     }
   });
 
-
-
 async function editEssayStudent() {
   const essayData = {
     user_id: localStorage.getItem("user_id"),
@@ -158,7 +156,7 @@ async function editEssayStudent() {
   };
 
   if (!essayData.essay_id) {
-    showErrorModal("Essay ID is required to save changes.");
+    showToast("essay-id-required", "error");
     return;
   }
 
@@ -173,11 +171,14 @@ async function editEssayStudent() {
     if (data.status === "success") {
       fetchResearchPapers("papers_student");
       closeDrawer();
+      showToast("success-editing-essay-student");
+      localStorage.setItem("essay_id", essayData.essay_id);
     } else {
       showErrorModal(data.message || "Failed to update essay.");
     }
   } catch (error) {
     console.error("Error updating essay:", error);
+    showToast("error-editing-essay-student", "error");
   }
 }
 
