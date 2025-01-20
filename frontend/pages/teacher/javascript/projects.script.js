@@ -379,8 +379,6 @@ function searchByProject() {
   const projectDropdown = document.getElementById("topic-dropdown");
   const selectedProjectId = projectDropdown.value;
 
-  console.log(`Selected Project ID: ${selectedProjectId}`);
-
   fetchTeamsByProjectId(selectedProjectId);
 }
 
@@ -400,10 +398,8 @@ async function fetchTeamsByProjectId(projectId) {
 
     if (data.status === "success") {
       if (data.data && data.data.length > 0) {
-        console.log("Teams for Project:", data.data);
         displayTeams(data.data);
       } else {
-        console.log("No teams found for this project.");
         displayNoTeamsMessage();
       }
     } else {

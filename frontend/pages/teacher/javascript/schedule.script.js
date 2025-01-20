@@ -73,24 +73,6 @@ function sortDays(data) {
   });
 }
 
-async function fetchFreeTimeSlots(selectedDate, type) {
-  try {
-    const response = await fetch(
-      `/w24-project/backend/fetch_free_time_slots.php?day_date=${selectedDate}&presentation_type=${type}`
-    );
-    const data = await response.json();
-
-    if (data.status === "success") {
-      console.log("Users presenting:", data.users);
-      console.log("Available time slots:", data.free_slots);
-    } else {
-      console.error("No presentations or available slots:", data.message);
-    }
-  } catch (error) {
-    console.error("Error fetching presentation details:", error);
-  }
-}
-
 async function fetchUsersPresentationsByDay(dayDate, presentationType, dayId) {
   if (!dayDate || !presentationType) {
     console.error("Day date and presentation type are required.");

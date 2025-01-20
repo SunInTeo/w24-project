@@ -155,8 +155,6 @@ async function handleLogin() {
     const contentType = response.headers.get("Content-Type");
     if (contentType && contentType.includes("application/json")) {
       const result = await response.json();
-      console.log(result);
-      console.log(response);
 
       if (response.ok) {
         setUserInLocalStorage(result);
