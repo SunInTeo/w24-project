@@ -58,7 +58,6 @@ async function fetchUserById(userId) {
     const data = await response.json();
 
     if (data.status === "success") {
-      console.log("User details:", data.user);
       return data.user;
     } else {
       console.error("Error fetching user:", data.message);
