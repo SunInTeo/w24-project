@@ -473,3 +473,4 @@ function displayErrorMessage(message) {
     errorContainer.style.display = "none";
   }, 5000);
 }
+

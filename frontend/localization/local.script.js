@@ -168,6 +168,10 @@ const languages = {
       "No research papers are available at the moment. Please add new topics to display them here.",
     "no-projects-papers":
       "No projects are available at the moment. Please add new topics to display them here.",
+    "success-propose-topic": "Successfully proposed topic!",
+    "error-propose-topic": "Failed to propose topic!",
+    "all-fields-required": "All fields are required!",
+    "proposed-topics": "See proposed topics",
   },
   bg: {
     "auth-title": "Автентикация",
@@ -326,6 +330,14 @@ const languages = {
     projects: "Проекти",
     "no-research-papers": "За момента няма теми за реферати.",
     "no-projects-papers": "За момента няма теми за проекти.",
+    "success-propose-topic": "Успешно предложихте тема!",
+    "error-propose-topic": "Неуспешно предлагане на тема!",
+    "all-fields-required": "Всички полета са задължителни!",
+    "proposed-topics": "Виж предложени теми",
+    "proposed-by-user": "Предложено от ",
+    "proposed-topics": "Предложени теми",
+    "no-proposed-topics":"Няма предложени теми",
+    "error-delete-topic-proposal":"Неуспешно изтриване на предложена тема!"
   },
 };
 

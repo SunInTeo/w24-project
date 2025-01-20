@@ -127,6 +127,7 @@ function createActionButtons(isProjectStored, container) {
   applyTranslations();
 }
 
+
 function populateDrawer(data) {
   const formatText = (text) => {
     if (!text || text === "-") return "";

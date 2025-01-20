@@ -6,18 +6,31 @@ header('Content-Type: application/json');
 $input = json_decode(file_get_contents('php://input'), true);
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $proposalType = $input['proposal_type'];
-    $topicLabel = $input['topic_label'];
-    $topicInfo = $input['topic_info'];
-    $proposedByUserId = $input['proposed_by_user_id'];
-    $proposedByUserName = $input['proposed_by_user_name'];
+    $proposalType = trim($input['proposal_type'] ?? '');
+    $topicLabel = trim($input['topic_label'] ?? '');
+    $topicInfo = trim($input['topic_info'] ?? '');
+    $proposedByUserId = trim($input['proposed_by_user_id'] ?? '');
+    $proposedByUserName = trim($input['proposed_by_user_name'] ?? '');
 
+    // Check for empty fields
     if (empty($proposalType) || empty($topicLabel) || empty($topicInfo) || empty($proposedByUserId) || empty($proposedByUserName)) {
         echo json_encode(["success" => false, "message" => "All fields are required."]);
         exit;
     }
 
     try {
+        // Ensure the proposed user exists
+        $userCheckStmt = $pdo->prepare("SELECT COUNT(*) FROM Users WHERE faculty_number = :faculty_number");
+        $userCheckStmt->bindParam(':faculty_number', $proposedByUserId, PDO::PARAM_STR);
+        $userCheckStmt->execute();
+        $userExists = $userCheckStmt->fetchColumn();
+
+        if (!$userExists) {
+            echo json_encode(["success" => false, "message" => "Invalid user ID."]);
+            exit;
+        }
+
+        // Insert the proposed topic
         $stmt = $pdo->prepare(
             "INSERT INTO ProposedTopics (proposal_type, topic_label, topic_info, proposed_by_user_id, proposed_by_user_name)
              VALUES (:proposal_type, :topic_label, :topic_info, :proposed_by_user_id, :proposed_by_user_name)"
@@ -25,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $stmt->bindParam(':proposal_type', $proposalType, PDO::PARAM_STR);
         $stmt->bindParam(':topic_label', $topicLabel, PDO::PARAM_STR);
         $stmt->bindParam(':topic_info', $topicInfo, PDO::PARAM_STR);
-        $stmt->bindParam(':proposed_by_user_id', $proposedByUserId, PDO::PARAM_INT);
+        $stmt->bindParam(':proposed_by_user_id', $proposedByUserId, PDO::PARAM_STR);
         $stmt->bindParam(':proposed_by_user_name', $proposedByUserName, PDO::PARAM_STR);
 
         if ($stmt->execute()) {
@@ -37,3 +50,4 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         echo json_encode(["success" => false, "message" => "Database error: " . $e->getMessage()]);
     }
 }
+?>

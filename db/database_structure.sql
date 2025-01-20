@@ -77,16 +77,15 @@ CREATE TABLE
         FOREIGN KEY (user_id) REFERENCES Users (user_id) ON DELETE CASCADE
     );
 
-CREATE TABLE
-    ProposedTopics (
-        topic_id INT AUTO_INCREMENT PRIMARY KEY,
-        proposal_type ENUM ('Essay', 'Project') NOT NULL,
-        topic_label VARCHAR(255) NOT NULL,
-        topic_info TEXT NOT NULL,
-        proposed_by_user_id INT NOT NULL,
-        proposed_by_user_name TEXT NOT NULL,
-        FOREIGN KEY (proposed_by) REFERENCES Users (user_id) ON DELETE CASCADE,
-    );
+CREATE TABLE ProposedTopics (
+    topic_id INT AUTO_INCREMENT PRIMARY KEY,
+    proposal_type ENUM ('Essay', 'Project') NOT NULL,
+    topic_label VARCHAR(255) NOT NULL,
+    topic_info TEXT NOT NULL,
+    proposed_by_user_id VARCHAR(20) NOT NULL, 
+    proposed_by_user_name TEXT NOT NULL,
+    FOREIGN KEY (proposed_by_user_id) REFERENCES Users(faculty_number) ON DELETE CASCADE
+);
 
 ALTER TABLE Users ADD CONSTRAINT fk_essay FOREIGN KEY (essay_id) REFERENCES Essays (essay_id) ON DELETE SET NULL,
 ADD CONSTRAINT fk_project FOREIGN KEY (project_id) REFERENCES Projects (project_id) ON DELETE SET NULL;

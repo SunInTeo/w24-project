@@ -192,3 +192,8 @@
   border-radius: 4px;
   margin-left: 10px;
 }
+
+#proposed-modal .modal-body {
+  max-height: 300px;
+  overflow: auto;
+}

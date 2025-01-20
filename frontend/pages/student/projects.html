@@ -96,35 +96,46 @@
           <div class="modal-body">
             <div class="block-container">
               <span data-i18n="propose-topic-text"></span>
-              <div class="input-container">
-                <i class="input-icon fa-solid fa-a"></i>
-                <input
-                  type="text"
-                  id="proposedTopic"
-                  data-i18n-placeholder="propose-topic-modal"
-                />
-                <button
-                  class="clear-button"
-                  aria-label="Clear input"
-                  title="Clear input"
-                >
-                  &times;
-                </button>
-              </div>
-              <textarea
-                class="textarea-component"
-                id="proposeTopicText"
-                data-i18n-placeholder="propose-topic-textarea"
-                rows="7"
-                required
-              ></textarea>
+              <form id="propose-topic-form">
+                <div class="input-container">
+                  <i class="input-icon fa-solid fa-a"></i>
+                  <input
+                    type="text"
+                    id="proposedTopic"
+                    data-i18n-placeholder="propose-topic-modal"
+                  />
+                  <button
+                    class="clear-button"
+                    aria-label="Clear input"
+                    title="Clear input"
+                  >
+                    &times;
+                  </button>
+                </div>
+                <textarea
+                  class="textarea-component"
+                  id="proposeTopicText"
+                  data-i18n-placeholder="propose-topic-textarea"
+                  rows="7"
+                  required
+                ></textarea>
+              </form>
+              <div
+                class="error-message"
+                id="errorMessage"
+                style="display: none"
+              ></div>
             </div>
           </div>
           <div class="modal-footer">
-            <button class="primary" data-i18n="send-text"></button>
+            <button
+              class="primary"
+              data-i18n="send-text"
+              onclick="sendProposeTopic('Project')"
+            ></button>
             <button
               class="secondary"
-              onclick="closeModal('propose-topic-modal','propose-topic-modal-overlay')"
+              onclick="closeModal('propose-topic-modal','propose-topic-modal-overlay');resetForm('propose-topic-form')"
               data-i18n="cancel-text"
             ></button>
           </div>
@@ -393,5 +404,6 @@
 
     <script src="./javascript/projects.script.js"></script>
     <script src="../javascript/projects_common.script.js"></script>
+    <script src="../javascript/propose_topic.script.js"></script>
   </body>
 </html>
