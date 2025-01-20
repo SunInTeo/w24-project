@@ -1,33 +1,25 @@
-const faqs = [
-  {
-    title: "What is your return policy?",
-    content: "We offer a 30-day return policy for unused and unopened items.",
-  },
-  {
-    title: "How can I track my order?",
-    content:
-      "You can track your order by logging into your account and checking the 'Order History' section.",
-  },
-  {
-    title: "Do you offer international shipping?",
-    content: "Yes, we ship internationally to over 50 countries.",
-  },
-  {
-    title: "What is your return policy?",
-    content: "We offer a 30-day return policy for unused and unopened items.",
-  },
-  {
-    title: "How can I track my order?",
-    content:
-      "You can track your order by logging into your account and checking the 'Order History' section.",
-  },
-  {
-    title: "Do you offer international shipping?",
-    content: "Yes, we ship internationally to over 50 countries.",
-  },
-];
+//----------------------------------------------FAQ-----------------------------------------------------
+function fetchFAQs() {
+  fetch('/w24-project/backend/faq_student.php', {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+      }
+  })
+  .then(response => response.json())
+  .then(data => {
+      if (data.status === 'success') {
+          renderFAQs(data.data);
+      } else {
+          console.error('Error fetching questions:', data.message);
+      }
+    })
+  .catch(error => {
+      console.error('Request failed:', error);
+  });
+}
 
-function renderFAQs() {
+function renderFAQs(faqs) {
   const accordion = document.querySelector(".accordion");
 
   accordion.innerHTML = "";
@@ -38,22 +30,24 @@ function renderFAQs() {
 
     const header = document.createElement("div");
     header.classList.add("accordion-header");
-    header.setAttribute("onclick", "toggleAccordion(this)");
+    header.setAttribute("onclick", `toggleAccordion(${index})`);
     header.innerHTML = `
-        <h4>${faq.title}</h4>
+        <h4>${faq.question}</h4>
         <span class="accordion-icon">+</span>
       `;
 
     const content = document.createElement("div");
     content.classList.add("accordion-content");
-    content.innerHTML = `<p>${faq.content}</p>`;
+    content.innerHTML = `<p>${faq.answer || 'No answer available yet.'}</p>`;
 
     accordionItem.appendChild(header);
     accordionItem.appendChild(content);
     accordion.appendChild(accordionItem);
   });
 }
+document.addEventListener('DOMContentLoaded', fetchFAQ);
 
+// -----------------------------------------CHANGE PASSWORD-----------------------------------------------------------------------
 document.addEventListener("DOMContentLoaded", () => {
   const changePasswordForm = document.getElementById("changePasswordForm");
 
