@@ -1,6 +1,6 @@
 const languages = {
   en: {
-    "auth-title": "Authentication",
+    "auth-title": "CATaLog Authentication",
     "auth-forgotten-password": "Forgotten Password",
     "auth-enter-email":
       "Please enter your registered email to recover your password:",
@@ -21,8 +21,8 @@ const languages = {
     "auth-placeholder-facultynumber": "Enter your faculty number",
     "auth-placeholder-reenter-password": "Re-enter your password",
     "home-title": "Home",
-    "nav-brand": "Panda",
-    "nav-welcome": "Welcome!",
+    "nav-brand": "CATaLog",
+    "nav-welcome": "Welcome to CATaLog!",
     "nav-logout": "Logout",
     "card-paper": "Papers",
     "card-project-topics": "Project Topics",
@@ -188,7 +188,7 @@ const languages = {
     "error-remove-from-schedule": "Error removing",
   },
   bg: {
-    "auth-title": "Автентикация",
+    "auth-title": "CATaLog Автентикация",
     "auth-forgotten-password": "Забравена парола",
     "auth-enter-email":
       "Моля, въведете вашия регистриран имейл, за да възстановите паролата си:",
@@ -208,8 +208,8 @@ const languages = {
     "auth-placeholder-facultynumber": "Въведете факултетния номер",
     "auth-placeholder-reenter-password": "Повторете паролата",
     "home-title": "Начало",
-    "nav-brand": "Панда",
-    "nav-welcome": "Добре дошли!",
+    "nav-brand": "CATaLog",
+    "nav-welcome": "Добре дошли в CATaLog!",
     "nav-logout": "Изход",
     "card-paper": "Реферати",
     "card-project-topics": "Теми за проекти",

@@ -66,3 +66,23 @@ img#account:hover {
   cursor: pointer;
   content: url("../../../assets/images/skills-open.png");
 }
+
+#chasing-cat {
+  width: 350px;
+  height: auto;
+}
+
+@media (max-width: 768px) {
+  .flex-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #chasing-cat {
+    max-width: 100px;
+  }
+
+  .container {
+    max-width: 100%;
+  }
+}

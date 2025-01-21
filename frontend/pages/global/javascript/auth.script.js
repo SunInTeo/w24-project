@@ -141,7 +141,7 @@ async function handleLogin() {
   const password = document.getElementById("passwordInput").value.trim();
 
   if (!username || !password) {
-    alert("Please enter both username and password.");
+    showToast("all-fields-required", "warning");
     return;
   }
 
