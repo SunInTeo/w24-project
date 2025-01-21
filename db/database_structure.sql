@@ -81,7 +81,6 @@ CREATE TABLE ProposedTopics (
     FOREIGN KEY (proposed_by_user_id) REFERENCES Users(faculty_number) ON DELETE CASCADE
 );
 
--- Add foreign key constraints to Users table
 ALTER TABLE Users 
 ADD CONSTRAINT fk_essay FOREIGN KEY (essay_id) REFERENCES Essays (essay_id) ON DELETE SET NULL,
 ADD CONSTRAINT fk_project FOREIGN KEY (project_id) REFERENCES Projects (project_id) ON DELETE SET NULL;
