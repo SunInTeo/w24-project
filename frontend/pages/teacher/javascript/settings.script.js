@@ -1,4 +1,3 @@
-//--------------------------------------------FAQ----------------------------------
 const faqMsg = document.querySelector(".faq-msg");
 const faqContainer = document.querySelector(".faq-content");
 function fetchFAQ() {
@@ -161,5 +160,3 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelector(".faq-header").appendChild(addFAQButton);
   applyTranslations();
 });
-
-//------------------------------------------------------CHANGE PASSWORD--------------------------------------------------------

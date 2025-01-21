@@ -71,7 +71,6 @@ try {
 
         $pdo->beginTransaction();
 
-        // Update project details
         $stmt = $pdo->prepare("
             UPDATE Projects
             SET title = :title,
@@ -96,7 +95,6 @@ try {
             'comments' => $comments,
         ]);
 
-        // Update teams if provided
         foreach ($teams as $team) {
             $team_id = intval($team['team_id'] ?? 0);
             $team_comments = trim($team['team_comments'] ?? '');
@@ -189,7 +187,6 @@ try {
         ]);
         $project_id = $pdo->lastInsertId();
 
-        // Insert teams if provided
         foreach ($teams as $team) {
             $team_comments = trim($team['team_comments'] ?? '');
             $sample_distribution_1 = trim($team['sample_distribution_1'] ?? '');
@@ -210,7 +207,6 @@ try {
             ]);
             $team_id = $pdo->lastInsertId();
 
-            // Insert team members
             foreach ($users_on_team as $user_id) {
                 $stmt = $pdo->prepare("
                     INSERT INTO TeamMembers (team_id, user_id)

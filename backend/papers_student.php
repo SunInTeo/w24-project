@@ -33,10 +33,8 @@ try {
                 exit;
             }
 
-            // Start transaction
             $pdo->beginTransaction();
 
-            // Update essay details
             $stmt = $pdo->prepare("
                 UPDATE Essays
                 SET title = :title,
@@ -63,7 +61,6 @@ try {
                 'essay_id' => $essay_id,
             ]);
 
-            // Update user's essay_id in Users table
             $stmt = $pdo->prepare("
                 UPDATE Users
                 SET essay_id = :essay_id
@@ -74,7 +71,6 @@ try {
                 'user_id' => $user_id,
             ]);
 
-            // Commit transaction
             $pdo->commit();
 
             echo json_encode(['status' => 'success', 'message' => 'Essay and user association updated successfully.']);

@@ -1,4 +1,3 @@
-//----------------------------------------------FAQ-----------------------------------------------------
 const faqMsg = document.querySelector(".faq-msg");
 const faqContainer = document.querySelector(".faq-content");
 
@@ -55,7 +54,6 @@ function renderFAQs(faqs) {
       accordion.appendChild(accordionItem);
     });
 
-    // Reapply translations after DOM updates
     applyTranslations();
   } else {
     faqMsg.innerHTML = '<p data-i18n="no-faqs"></p>';

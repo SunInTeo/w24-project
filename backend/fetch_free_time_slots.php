@@ -14,10 +14,8 @@ try {
             exit;
         }
 
-        // Determine the column to query based on presentation type
         $column = ($presentation_type === 'Essay') ? 'essay_presentation_datetime' : 'project_presentation_datetime';
 
-        // Fetch users presenting on the selected day
         $stmt = $pdo->prepare("
             SELECT 
                 user_id, 
@@ -32,7 +30,6 @@ try {
         $stmt->execute(['day_date' => $selected_date]);
         $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Fetch the presentation day details (start and end times)
         $stmt = $pdo->prepare("
             SELECT start_time, end_time, interval_count
             FROM PresentationDays 
@@ -51,17 +48,14 @@ try {
         $startTime = new DateTime($dayDetails['start_time']);
         $endTime = new DateTime($dayDetails['end_time']);
 
-        // Calculate slot duration for 20 equal slots
         $totalDuration = $endTime->getTimestamp() - $startTime->getTimestamp();
-        $intervalSeconds = $totalDuration / 20; // 20 equal slots
+        $intervalSeconds = $totalDuration / 20;
 
-        // Collect occupied slots
         $occupiedSlots = [];
         foreach ($users as $user) {
             $occupiedSlots[] = (new DateTime($user['presentation_datetime']))->format('H:i');
         }
 
-        // Generate free slots
         $freeSlots = [];
         $currentSlot = clone $startTime;
         for ($i = 0; $i < 20; $i++) {

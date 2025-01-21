@@ -8,7 +8,6 @@ button {
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-/* Primary button */
 button.primary {
   background-color: var(--primary-color);
   color: var(--text-color);
@@ -17,7 +16,6 @@ button.primary:hover {
   background-color: var(--secondary-color);
 }
 
-/* Secondary button */
 button.secondary {
   background-color: var(--secondary-color);
   color: var(--text-color);
@@ -26,7 +24,6 @@ button.secondary:hover {
   background-color: var(--tertiary-color);
 }
 
-/* Accent button */
 button.accent {
   background-color: var(--accent-color);
   color: var(--primary-color);
@@ -36,7 +33,6 @@ button.accent:hover {
   color: var(--text-color);
 }
 
-/* Disabled button */
 button.disabled {
   background-color: var(--background-color);
   color: var(--secondary-color);
@@ -53,12 +49,11 @@ button.delete:hover {
   background-color: rgb(176, 31, 31);
 }
 
-/* Radio Button Component */
 .radio-container {
   display: flex;
-  flex-direction: row; /* Stack radio buttons vertically */
+  flex-direction: row;
   gap: 10px;
-  margin-bottom: 20px; /* Adjust margin for spacing */
+  margin-bottom: 20px;
 }
 
 .radio-container label {
@@ -105,7 +100,6 @@ button.delete:hover {
   border-color: var(--primary-color);
 }
 
-/*Language toggle*/
 .language-toggle {
   position: fixed;
   bottom: 30px;

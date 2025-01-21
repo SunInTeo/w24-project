@@ -12,14 +12,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $proposedByUserId = trim($input['proposed_by_user_id'] ?? '');
     $proposedByUserName = trim($input['proposed_by_user_name'] ?? '');
 
-    // Check for empty fields
     if (empty($proposalType) || empty($topicLabel) || empty($topicInfo) || empty($proposedByUserId) || empty($proposedByUserName)) {
         echo json_encode(["success" => false, "message" => "All fields are required."]);
         exit;
     }
 
     try {
-        // Ensure the proposed user exists
         $userCheckStmt = $pdo->prepare("SELECT COUNT(*) FROM Users WHERE faculty_number = :faculty_number");
         $userCheckStmt->bindParam(':faculty_number', $proposedByUserId, PDO::PARAM_STR);
         $userCheckStmt->execute();
@@ -30,7 +28,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             exit;
         }
 
-        // Insert the proposed topic
         $stmt = $pdo->prepare(
             "INSERT INTO ProposedTopics (proposal_type, topic_label, topic_info, proposed_by_user_id, proposed_by_user_name)
              VALUES (:proposal_type, :topic_label, :topic_info, :proposed_by_user_id, :proposed_by_user_name)"

@@ -1,5 +1,4 @@
 <?php
-// user.php: User Class
 
 class User
 {
@@ -12,7 +11,6 @@ class User
 
     public function register($username, $email, $password)
     {
-        // Validate inputs
         if (empty($username) || empty($email) || empty($password)) {
             return 'All fields are required.';
         }
@@ -32,7 +30,7 @@ class User
             ]);
             return true;
         } catch (PDOException $e) {
-            if ($e->getCode() === '23000') { // Duplicate entry
+            if ($e->getCode() === '23000') {
                 return 'Email or username already exists.';
             } else {
                 return 'Registration failed: ' . $e->getMessage();
