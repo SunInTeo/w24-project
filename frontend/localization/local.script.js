@@ -172,6 +172,16 @@ const languages = {
     "error-propose-topic": "Failed to propose topic!",
     "all-fields-required": "All fields are required!",
     "proposed-topics": "See proposed topics",
+    "proposed-by-user": "Proposed by",
+    "proposed-topics": "Proposed Topics",
+    "no-proposed-topics": "No proposed topics",
+    "error-delete-topic-proposal": "Failed to delete the proposed topic!",
+    "success-change-password": "Password changed successfully!",
+    "error-change-password": "Failed to change the password!",
+    "passwords-dont-match": "Password confirmation failed!",
+    "error-register": "Registration failed!",
+    "error-login": "Login failed!",
+    "no-faqs": "No FAQs",
   },
   bg: {
     "auth-title": "Автентикация",
@@ -336,8 +346,14 @@ const languages = {
     "proposed-topics": "Виж предложени теми",
     "proposed-by-user": "Предложено от ",
     "proposed-topics": "Предложени теми",
-    "no-proposed-topics":"Няма предложени теми",
-    "error-delete-topic-proposal":"Неуспешно изтриване на предложена тема!"
+    "no-proposed-topics": "Няма предложени теми",
+    "error-delete-topic-proposal": "Неуспешно изтриване на предложена тема!",
+    "success-change-password": "Успешна промяна на паролата!",
+    "error-change-password": "Неуспешна промяна на паролата!",
+    "passwords-dont-match": "Неуспешно потвърждение на новата парола!",
+    "error-register": "Неуспешна регистрация!",
+    "error-login": "Неуспешен вход!",
+    "no-faqs": "Няма ЧЗВ",
   },
 };
 

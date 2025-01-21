@@ -1,37 +1,43 @@
 //--------------------------------------------FAQ----------------------------------
-
+const faqMsg = document.querySelector(".faq-msg");
+const faqContainer = document.querySelector(".faq-content");
 function fetchFAQ() {
-  fetch('/w24-project/backend/faq_teacher.php', {
-      method: 'GET',
-      headers: {
-          'Content-Type': 'application/json',
-      }
+  fetch("/w24-project/backend/faq_admin.php", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
   })
-  .then(response => response.json())
-  .then(data => {
-      if (data.status === 'success') {
-          renderFAQList(data.data);
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.status === "success") {
+        renderFAQList(data.data);
       } else {
-          console.error('Error fetching questions:', data.message);
+        console.error("Error fetching questions:", data.message);
       }
-  })
-  .catch(error => {
-      console.error('Request failed:', error);
-  });
+    })
+    .catch((error) => {
+      console.error("Request failed:", error);
+    });
 }
 
 function renderFAQList(faqs) {
-  const accordion = document.querySelector(".accordion");
+  if (faqs.length > 0) {
+    faqContainer.style.display = "block";
+    const accordion = document.querySelector(".accordion");
 
-  accordion.innerHTML = "";
+    faqMsg.innerHTML = "";
+    accordion.innerHTML = "";
 
-  faqs.forEach((faq, index) => {
+    faqs.forEach((faq, index) => {
       const accordionItem = document.createElement("div");
       accordionItem.classList.add("accordion-item");
 
       const header = document.createElement("div");
       header.classList.add("accordion-header");
-      header.setAttribute("onclick", `toggleAccordion(${index})`);
+      header.onclick = function () {
+        toggleAccordion(this);
+      };
       header.innerHTML = `
           <h4>${faq.question}</h4>
           <span class="accordion-icon">+</span>
@@ -39,40 +45,27 @@ function renderFAQList(faqs) {
 
       const content = document.createElement("div");
       content.classList.add("accordion-content");
-      content.innerHTML = `<p>${faq.answer || 'No answer available yet.'}</p>`;
-
-      const answerInput = document.createElement("textarea");
-      answerInput.placeholder = "Enter your answer here...";
-      content.appendChild(answerInput);
-
-      const addAnswerBtn = document.createElement("button");
-      addAnswerBtn.textContent = "Add Answer";
-      addAnswerBtn.onclick = function() {
-          addAnswer(faq.question, answerInput.value);
-      };
-      content.appendChild(addAnswerBtn);
+      content.innerHTML = `<p>${faq.answer || "No answer available yet."}</p>`;
 
       const deleteQuestionBtn = document.createElement("button");
       deleteQuestionBtn.textContent = "Delete Question";
-      deleteQuestionBtn.onclick = function() {
-          deleteQuestion(faq.question);
+      deleteQuestionBtn.onclick = function () {
+        deleteQuestion(faq.question);
       };
       content.appendChild(deleteQuestionBtn);
 
       accordionItem.appendChild(header);
       accordionItem.appendChild(content);
       accordion.appendChild(accordionItem);
-  });
+    });
+  } else {
+    faqMsg.innerHTML = '<p data-i18n="no-faqs"></p>';
+    faqContainer.style.display = "none";
+    applyTranslations();
+  }
 }
 
-function toggleAccordion(index) {
-  const accordionItems = document.querySelectorAll(".accordion-item");
-  const content = accordionItems[index].querySelector(".accordion-content");
-
-  content.style.display = content.style.display === "block" ? "none" : "block";
-}
-
-function addQuestionAnswer() {
+async function addQuestionAnswer() {
   const questionInput = document.getElementById("questionInput");
   const answerInput = document.getElementById("answerInput");
 
@@ -80,66 +73,84 @@ function addQuestionAnswer() {
   const answer = answerInput.value.trim();
 
   if (!question || !answer) {
-      alert("Both question and answer are required.");
-      return;
+    return;
   }
 
   const payload = {
-      question: question,
-      answer: answer
+    question: question,
+    answer: answer,
   };
 
-  fetch('/w24-project/backend/faq_teacher.php', {
-      method: 'POST',
+  try {
+    const response = await fetch("/w24-project/backend/faq_admin.php", {
+      method: "POST",
       headers: {
-          'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(payload)
-  })
-  .then(response => response.json())
-  .then(data => {
-      if (data.status === 'success') {
-          alert(data.message);
-          questionInput.value = '';
-          answerInput.value = '';
-          fetchFAQ();
-      } else {
-          console.error('Failed to add question and answer:', data.message);
-      }
-  })
-  .catch(error => {
-      console.error('Request failed:', error);
-  });
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    if (data.status === "success") {
+      questionInput.value = "";
+      answerInput.value = "";
+      fetchFAQ();
+    } else {
+      throw new Error(data.message || "Failed to add question and answer.");
+    }
+  } catch (error) {
+    console.error("Request failed:", error);
+  } finally {
+    closeModal("add-faq-modal", "add-faq-modal-overlay");
+  }
 }
 
-function deleteQuestion(question) {
+async function deleteQuestion(question) {
+  if (!question) {
+    return;
+  }
+
   const payload = {
-      question: question
+    question: question,
   };
 
-  fetch('/w24-project/backend/faq_teacher.php', {
-      method: 'DELETE',
+  try {
+    const response = await fetch("/w24-project/backend/faq_admin.php", {
+      method: "DELETE",
       headers: {
-          'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(payload)
-  })
-  .then(response => response.json())
-  .then(data => {
-      if (data.status === 'success') {
-          alert(data.message);
-          fetchFAQ();
-      } else {
-          console.error('Failed to delete question:', data.message);
-      }
-  })
-  .catch(error => {
-      console.error('Request failed:', error);
-  });
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    if (data.status === "success") {
+      fetchFAQ();
+    } else {
+      throw new Error(data.message || "Failed to delete the question.");
+    }
+  } catch (error) {
+    console.error("Request failed:", error);
+  }
+}
+
+function openAddFAQModal() {
+  openModal("add-faq-modal", "add-faq-modal-overlay");
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   fetchFAQ();
+  document.querySelector(".section-title").setAttribute("data-i18n", "faq");
 
   const addFAQButton = document.createElement("button");
   addFAQButton.setAttribute("data-i18n", "add-faq");

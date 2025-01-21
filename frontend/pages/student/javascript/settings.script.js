@@ -1,101 +1,69 @@
 //----------------------------------------------FAQ-----------------------------------------------------
-function fetchFAQs() {
-  fetch('/w24-project/backend/faq_student.php', {
-      method: 'GET',
-      headers: {
-          'Content-Type': 'application/json',
-      }
+const faqMsg = document.querySelector(".faq-msg");
+const faqContainer = document.querySelector(".faq-content");
+
+function fetchFAQ() {
+  fetch("/w24-project/backend/faq_student.php", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
   })
-  .then(response => response.json())
-  .then(data => {
-      if (data.status === 'success') {
-          renderFAQs(data.data);
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.status === "success") {
+        renderFAQs(data.data);
+        applyTranslations();
       } else {
-          console.error('Error fetching questions:', data.message);
+        console.error("Error fetching questions:", data.message);
       }
     })
-  .catch(error => {
-      console.error('Request failed:', error);
-  });
+    .catch((error) => {
+      console.error("Request failed:", error);
+    });
 }
-
 function renderFAQs(faqs) {
+  const faqHeader = document.querySelector(".faq-header");
   const accordion = document.querySelector(".accordion");
 
-  accordion.innerHTML = "";
+  if (faqs.length > 0) {
+    accordion.innerHTML = "";
+    faqMsg.innerHTML = "";
+    faqContainer.style.display = "block";
+    faqHeader.style.display = "block";
 
-  faqs.forEach((faq, index) => {
-    const accordionItem = document.createElement("div");
-    accordionItem.classList.add("accordion-item");
+    faqs.forEach((faq) => {
+      const accordionItem = document.createElement("div");
+      accordionItem.classList.add("accordion-item");
 
-    const header = document.createElement("div");
-    header.classList.add("accordion-header");
-    header.setAttribute("onclick", `toggleAccordion(${index})`);
-    header.innerHTML = `
-        <h4>${faq.question}</h4>
+      const header = document.createElement("div");
+      header.classList.add("accordion-header");
+      header.onclick = function () {
+        toggleAccordion(this);
+      };
+      header.innerHTML = `
+        <h4 data-i18n="faq-question">${faq.question}</h4>
         <span class="accordion-icon">+</span>
       `;
 
-    const content = document.createElement("div");
-    content.classList.add("accordion-content");
-    content.innerHTML = `<p>${faq.answer || 'No answer available yet.'}</p>`;
+      const content = document.createElement("div");
+      content.classList.add("accordion-content");
+      content.innerHTML = `<p>${faq.answer || "No answer available yet."}</p>`;
 
-    accordionItem.appendChild(header);
-    accordionItem.appendChild(content);
-    accordion.appendChild(accordionItem);
-  });
+      accordionItem.appendChild(header);
+      accordionItem.appendChild(content);
+      accordion.appendChild(accordionItem);
+    });
+
+    // Reapply translations after DOM updates
+    applyTranslations();
+  } else {
+    faqMsg.innerHTML = '<p data-i18n="no-faqs"></p>';
+    faqContainer.style.display = "none";
+    faqHeader.style.display = "none";
+    applyTranslations();
+  }
 }
-document.addEventListener('DOMContentLoaded', fetchFAQ);
 
-// -----------------------------------------CHANGE PASSWORD-----------------------------------------------------------------------
-document.addEventListener("DOMContentLoaded", () => {
-  const changePasswordForm = document.getElementById("changePasswordForm");
-
-  document.querySelector(".primary[data-i18n='save-changes']").addEventListener("click", async (event) => {
-      event.preventDefault();
-
-      const oldPassword = document.getElementById("oldPasswordInput").value;
-      const newPassword = document.getElementById("passwordInput").value;
-      const confirmPassword = document.getElementById("passwordInput").value;
-
-      if (!oldPassword || !newPassword || !confirmPassword) {
-          alert("All fields are required.");
-          return;
-      }
-
-      if (newPassword !== confirmPassword) {
-          alert("New password and confirm password do not match.");
-          return;
-      }
-
-      if (newPassword.length < 8) {
-          alert("Password must be at least 8 characters long.");
-          return;
-      }
-
-      try {
-          const response = await fetch("../../../backend/change_pass.php", {
-              method: "POST",
-              headers: {
-                  "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                  oldPassword,
-                  newPassword,
-              }),
-          });
-
-          const result = await response.json();
-
-          if (response.ok) {
-              alert(result.message);
-              closeModal("change-pass-modal", "change-pass-modal-overlay");
-          } else {
-              alert(result.message || "An error occurred.");
-          }
-      } catch (error) {
-          console.error("Error:", error);
-          alert("An unexpected error occurred.");
-      }
-  });
-});
+document.addEventListener("DOMContentLoaded", fetchFAQ);
+document.addEventListener("DOMContentLoaded", applyTranslations());

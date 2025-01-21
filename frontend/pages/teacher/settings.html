@@ -49,15 +49,7 @@
                 disabled
               />
             </div>
-            <div class="input-container">
-              <i class="input-icon fa-solid fa-user"></i>
-              <input
-                type="text"
-                id="facultyNumber"
-                placeholder="Enter your name"
-                disabled
-              />
-            </div>
+
             <button
               class="accent small change-pass-btn"
               data-i18n="change-password"
@@ -67,11 +59,14 @@
 
           <div class="faq-section">
             <div class="faq-header">
-              <h3 class="section-title" data-i18n="faq"></h3>
+              <h3 class="section-title" data-i18n="faq">
+                FAQ (Frequently asked questions)
+              </h3>
             </div>
             <div class="faq-content">
               <div class="accordion"></div>
             </div>
+            <div class="faq-msg"></div>
           </div>
         </div>
       </div>
@@ -101,21 +96,8 @@
               type="password"
               id="oldPasswordInput"
               data-i18n-placeholder="old-password"
+              placeholder="Old Password"
             />
-            <button
-              class="clear-button"
-              aria-label="Clear input"
-              title="Clear input"
-            >
-              &times;
-            </button>
-            <button
-              class="toggle-password"
-              aria-label="Toggle password visibility"
-              title="Toggle password visibility"
-            >
-              <i class="fa-solid fa-eye"></i>
-            </button>
           </div>
           <div class="input-container">
             <i class="input-icon fa-solid fa-lock"></i>
@@ -123,48 +105,26 @@
               type="password"
               id="passwordInput"
               data-i18n-placeholder="new-password"
+              placeholder="New Password"
             />
-            <button
-              class="clear-button"
-              aria-label="Clear input"
-              title="Clear input"
-            >
-              &times;
-            </button>
-            <button
-              class="toggle-password"
-              aria-label="Toggle password visibility"
-              title="Toggle password visibility"
-            >
-              <i class="fa-solid fa-eye"></i>
-            </button>
           </div>
           <div class="input-container">
             <i class="input-icon fa-solid fa-lock"></i>
             <input
               type="password"
-              id="passwordInput"
+              id="confirmPasswordInput"
               data-i18n-placeholder="confirm-password"
+              placeholder="Confirm Password"
             />
-            <button
-              class="clear-button"
-              aria-label="Clear input"
-              title="Clear input"
-            >
-              &times;
-            </button>
-            <button
-              class="toggle-password"
-              aria-label="Toggle password visibility"
-              title="Toggle password visibility"
-            >
-              <i class="fa-solid fa-eye"></i>
-            </button>
           </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button class="primary" data-i18n="save-changes"></button>
+        <button
+          class="primary"
+          data-i18n="save-changes"
+          onclick="changePassword()"
+        ></button>
         <button
           class="secondary"
           data-i18n="cancel-text"
@@ -195,14 +155,14 @@
             <i class="input-icon fa-solid fa-question"></i>
             <input
               type="text"
-              id="faq-question"
+              id="questionInput"
               data-i18n-placeholder="question"
             />
           </div>
           <div class="input-container">
             <textarea
               class="textarea-component"
-              id="faq-answer"
+              id="answerInput"
               rows="5"
               data-i18n-placeholder="answer"
             ></textarea>
@@ -212,7 +172,7 @@
       <div class="modal-footer">
         <button
           class="primary"
-          onclick="addFAQ()"
+          onclick="addQuestionAnswer()"
           data-i18n="save-text"
         ></button>
         <button
@@ -221,6 +181,9 @@
           onclick="closeModal('add-faq-modal', 'add-faq-modal-overlay');resetForm('add-faq-form')"
         ></button>
       </div>
+    </div>
+    <div id="toast" class="toast hidden">
+      <span id="toast-message"></span>
     </div>
 
     <div class="language-toggle"></div>
@@ -232,6 +195,9 @@
     <script src="../../components/javascript/input.script.js"></script>
     <script src="../../components/javascript/modal.script.js"></script>
     <script src="../../components/javascript/accordion.script.js"></script>
+    <script src="../../components/javascript/toast.script.js"></script>
+    <script src="../javascript/settings_common.script.js"></script>
+
     <script src="./javascript/settings.script.js"></script>
   </body>
 </html>

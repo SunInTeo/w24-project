@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const user = await fetchUserById(user_id);
   localStorage.setItem("project_id", user.project_id);
   localStorage.setItem("essay_id", user.essay_id);
+  localStorage.setItem("email", user.email);
 });
 
 function navigateToHome() {
@@ -24,9 +25,24 @@ function navigateToHome() {
   }
 }
 
-function handleLogout() {
-  localStorage.clear();
-  window.location.href = "../global/auth.html";
+async function handleLogout() {
+  try {
+    const response = await fetch("/w24-project/backend/logout.php");
+
+    if (response.ok) {
+      const result = await response.json();
+      if (result.status === "success") {
+        localStorage.clear();
+        window.location.href = "../global/auth.html";
+      } else {
+        console.error("Logout failed:", result.message);
+      }
+    } else {
+      console.error("Failed to connect to the server for logout.");
+    }
+  } catch (error) {
+    console.error("Error logging out:", error);
+  }
 }
 
 function navigateTo(location) {
