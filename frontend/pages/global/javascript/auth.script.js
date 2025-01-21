@@ -177,6 +177,14 @@ function setUserInLocalStorage(result) {
   localStorage.setItem("name", result.name);
   localStorage.setItem("project_id", result.project_id);
   localStorage.setItem("essay_id", result.essay_id);
+  localStorage.setItem(
+    "essay_presentation_datetime",
+    result.essay_presentation_datetime
+  );
+  localStorage.setItem(
+    "project_presentation_datetime",
+    result.project_presentation_datetime
+  );
 }
 
 async function checkUserSession() {

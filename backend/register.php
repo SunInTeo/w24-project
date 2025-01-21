@@ -47,14 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode([
             'status' => 'success',
             'message' => 'Registration successful.',
-            'user' => [
-                'user_id' => $userId,
-                'username' => $username,
-                'user_type' => $userType,
-                'email' => $email,
-                'faculty_number' => $facultyNumber,
-                'name' => $name,
-            ]
+            'user' => $user
         ]);
         http_response_code(200);
     } catch (PDOException $e) {

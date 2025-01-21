@@ -7,6 +7,7 @@ const timetableContainer = document.getElementsByClassName(
   "timetable-card-container"
 )[0];
 const essayId = localStorage.getItem("essay_id");
+const userId = localStorage.getItem("user_id");
 const projectId = localStorage.getItem("project_id");
 
 const noDataCard = `    
@@ -26,6 +27,7 @@ const selectDataCard = `
     </div>`;
 document.addEventListener("DOMContentLoaded", async function () {
   fetchPresentationDays();
+  fetchUserById(userId);
 });
 
 async function fetchPresentationDays() {
@@ -121,6 +123,40 @@ function renderDayData(dayData, dayId) {
     </div>
   `;
 
+  if (
+    localStorage.getItem("essay_presentation_datetime") &&
+    localStorage.getItem("essay_presentation_datetime") !== "null" &&
+    localStorage.getItem("essay_presentation_datetime") !== "undefined" &&
+    localStorage.getItem("user_id")
+  ) {
+    tableHTML += `
+      <button
+        class="delete-button small"
+        onclick="removeFromSchedule(${localStorage.getItem(
+          "user_id"
+        )}, 'Essay')"
+        data-i18n="remove-from-essays-schedule"
+      ></button>
+    `;
+  }
+
+  if (
+    localStorage.getItem("project_presentation_datetime") &&
+    localStorage.getItem("project_presentation_datetime") !== "null" &&
+    localStorage.getItem("project_presentation_datetime") !== "undefined" &&
+    localStorage.getItem("user_id")
+  ) {
+    tableHTML += `
+      <button
+        class="delete-button small"
+        onclick="removeFromSchedule(${localStorage.getItem(
+          "user_id"
+        )}, 'Project')"
+        data-i18n="remove-from-project-schedule"
+      ></button>
+    `;
+  }
+
   if (!dayData || dayData.length === 0) {
     tableHTML += `
       <div class="timetable-card-container">
@@ -190,7 +226,64 @@ function renderDayData(dayData, dayId) {
   timetableContainer.innerHTML = tableHTML;
   applyTranslations();
 }
+function hasValidPresentation(presentationKey) {
+  const value = localStorage.getItem(presentationKey);
+  return value && value !== "null" && value !== "undefined";
+}
+window.addEventListener("storage", (event) => {
+  if (
+    event.key === "essay_presentation_datetime" ||
+    event.key === "project_presentation_datetime"
+  ) {
+    renderRemoveScheduleButtons();
+  }
+});
 
+function renderRemoveScheduleButtons() {
+  let tableHTML = `
+    <div class="flex-container page-actions" id="page-actions">
+      <button
+        class="propose-button"
+        data-i18n="add-me-to-timetable"
+        onclick="openAddToTimetableModal('add-timeslot-modal','add-timeslot-modal-overlay')"
+      ></button>
+  `;
+
+  if (
+    hasValidPresentation("essay_presentation_datetime") &&
+    localStorage.getItem("user_id")
+  ) {
+    tableHTML += `
+      <button
+        class="delete-button small"
+        onclick="removeFromSchedule(${localStorage.getItem(
+          "user_id"
+        )}, 'Essay')"
+        data-i18n="remove-from-essays-schedule"
+      ></button>
+    `;
+  }
+
+  if (
+    hasValidPresentation("project_presentation_datetime") &&
+    localStorage.getItem("user_id")
+  ) {
+    tableHTML += `
+      <button
+        class="delete-button small"
+        onclick="removeFromSchedule(${localStorage.getItem(
+          "user_id"
+        )}, 'Project')"
+        data-i18n="remove-from-project-schedule"
+      ></button>
+    `;
+  }
+
+  tableHTML += `</div>`;
+  document.getElementById("page-actions").innerHTML = tableHTML;
+
+  applyTranslations();
+}
 async function fetchFreeTimeSlots(dayDate, presentationType) {
   try {
     const response = await fetch(
@@ -360,9 +453,22 @@ async function submitTimeslotForm() {
     const data = await response.json();
 
     if (data.status === "success") {
+      if (presentationType === "Essay") {
+        localStorage.setItem(
+          "essay_presentation_datetime",
+          presentationDatetime
+        );
+      } else if (presentationType === "Project") {
+        localStorage.setItem(
+          "project_presentation_datetime",
+          presentationDatetime
+        );
+      }
+
       showToast("success-adding-to-schedule");
       closeModal("add-timeslot-modal", "add-timeslot-modal-overlay");
       resetForm("add-timeslot-form");
+
       await showDayData(
         selectedDay.day_id,
         null,
@@ -375,5 +481,36 @@ async function submitTimeslotForm() {
   } catch (error) {
     console.error("Error submitting timeslot:", error);
     showToast("error-adding-to-schedule", "error");
+  }
+}
+
+async function removeFromSchedule(userId, presentationType) {
+  try {
+    const response = await fetch("/w24-project/backend/schedule_student.php", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user_id: userId,
+        presentation_type: presentationType,
+      }),
+    });
+
+    const result = await response.json();
+    if (response.ok) {
+      showToast("success-remove-from-schedule");
+      if (presentationType === "Essay") {
+        localStorage.setItem("essay_presentation_datetime", "null");
+      } else if (presentationType === "Project") {
+        localStorage.setItem("project_presentation_datetime", "null");
+      }
+      window.location.reload();
+    } else {
+      console.error("Error:", result.message);
+      showToast("error-remove-from-schedule", "error");
+    }
+  } catch (error) {
+    console.error("Request failed:", error);
   }
 }

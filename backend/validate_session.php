@@ -6,13 +6,7 @@ header('Content-Type: application/json');
 if (isset($_SESSION['user_id'])) {
     echo json_encode([
         'status' => 'success',
-        'user' => [
-            'user_id' => $_SESSION['user_id'],
-            'username' => $_SESSION['username'],
-            'user_type' => $_SESSION['user_type'],
-            'faculty_number' => $_SESSION['faculty_number'],
-            'name' => $_SESSION['name']
-        ]
+        'user' => $user
     ]);
 } else {
     http_response_code(401);

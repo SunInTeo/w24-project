@@ -29,15 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo json_encode([
                 'status' => 'success',
                 'message' => 'Login successful.',
-                'user' => [
-                    'user_id' => $user['user_id'],
-                    'username' => $user['username'],
-                    'name' => $user['name'],
-                    'faculty_number' => $user['faculty_number'],
-                    'user_type' => $user['user_type'],
-                    'essay_id' => $user['essay_id'],
-                    'project_id' => $user['project_id']
-                ]
+                'user' => $user
             ]);
             http_response_code(200);
         } else {

@@ -182,6 +182,10 @@ const languages = {
     "error-register": "Registration failed!",
     "error-login": "Login failed!",
     "no-faqs": "No FAQs",
+    "remove-from-essays-schedule": "Remove me from essays schedule",
+    "remove-from-project-schedule": "Remove me from project schedule",
+    "success-remove-from-schedule": "Successfully removed",
+    "error-remove-from-schedule": "Error removing",
   },
   bg: {
     "auth-title": "Автентикация",
@@ -354,6 +358,10 @@ const languages = {
     "error-register": "Неуспешна регистрация!",
     "error-login": "Неуспешен вход!",
     "no-faqs": "Няма ЧЗВ",
+    "remove-from-essays-schedule": "Премахване от списъка за реферати",
+    "remove-from-project-schedule": "Премахване от списъка за проекти",
+    "success-remove-from-schedule": "Успешно премахване от списъка",
+    "error-remove-from-schedule": "Неуспешно премахване от списъка",
   },
 };
 
