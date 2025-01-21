@@ -240,7 +240,7 @@ document
       .value.trim();
 
     if (!proposedTopic || !proposeTopicText) {
-      alert("Please fill out all fields.");
+      showToast("all-fields-required", "warning");
       return;
     }
 
@@ -257,11 +257,11 @@ document
       const data = await response.json();
 
       if (data.status === "success") {
-        alert("Topic proposed successfully!");
+        showToast("success-propose-topic");
         closeModal("propose-topic-modal", "propose-topic-modal-overlay");
         resetForm("propose-topic-form");
       } else {
-        alert(data.message);
+        showToast("error-propose-topic", "error");
       }
     } catch (error) {
       console.error("Error proposing topic:", error);

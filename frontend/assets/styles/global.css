@@ -134,3 +134,10 @@ label {
   opacity: 1;
   height: auto;
 }
+
+img#logo {
+  cursor: pointer;
+  width: 50px;
+  height: 40px;
+}
+
