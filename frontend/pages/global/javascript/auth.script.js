@@ -119,7 +119,7 @@ async function handleRegister() {
 
     if (contentType && contentType.includes("application/json")) {
       const result = await response.json();
-      if (response.ok && result.status === "success") {
+      if (result.status === "success") {
         setUserInLocalStorage(result.user);
         window.location.href = "home.html";
       } else {

@@ -44,6 +44,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $userId = $pdo->lastInsertId();
 
+        $stmt = $pdo->prepare("SELECT user_id, user_type, faculty_number, name, username, email FROM Users WHERE user_id = :userId");
+        $stmt->execute(['userId' => $userId]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
         echo json_encode([
             'status' => 'success',
             'message' => 'Registration successful.',
@@ -58,4 +62,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     echo json_encode(['status' => 'error', 'message' => 'Invalid request method.']);
     http_response_code(405);
 }
+
 ?>

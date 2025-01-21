@@ -127,7 +127,6 @@ function createActionButtons(isProjectStored, container) {
   applyTranslations();
 }
 
-
 function populateDrawer(data) {
   const formatText = (text) => {
     if (!text || text === "-") return "";
@@ -609,4 +608,50 @@ async function deleteTeam() {
     closeModal("edit-team-modal", "edit-team-modal-overlay");
     closeModal("confirm-modal", "confirm-modal-overlay");
   }
+}
+
+function downloadTableAsExcel(tableID) {
+  const table = document.querySelector(`.table#${tableID}`);
+
+  const data = [];
+  const rows = table.querySelectorAll("tr");
+  rows.forEach((row) => {
+    const rowData = [];
+    const cells = row.querySelectorAll("th, td");
+    cells.forEach((cell) => {
+      rowData.push(cell.innerText.trim());
+    });
+    data.push(rowData);
+  });
+
+  const workbook = XLSX.utils.book_new();
+  const worksheet = XLSX.utils.aoa_to_sheet(data);
+
+  const columnWidths = [
+    { wch: 15 },
+    { wch: 20 },
+    { wch: 40 },
+    { wch: 40 },
+    { wch: 40 },
+    { wch: 40 },
+    { wch: 40 },
+    { wch: 40 },
+  ];
+  worksheet["!cols"] = columnWidths;
+
+  const rowHeights = [
+    { hpt: 25 },
+    { hpt: 55 },
+    { hpt: 55 },
+    { hpt: 55 },
+    { hpt: 55 },
+    { hpt: 55 },
+    { hpt: 55 },
+    { hpt: 55 },
+  ];
+  worksheet["!rows"] = rowHeights;
+
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+
+  XLSX.writeFile(workbook, "projects_table.xlsx");
 }
