@@ -120,3 +120,17 @@ footer {
 label {
   font-size: smaller;
 }
+
+.hidden-content {
+  visibility: hidden; /* Hides content but keeps space */
+  opacity: 0; /* Makes it visually disappear */
+  height: 0; /* Reduces height to zero */
+  overflow: hidden; /* Hides overflowing elements */
+  transition: opacity 0.3s ease-in-out;
+}
+
+.hidden-content.show {
+  visibility: visible;
+  opacity: 1;
+  height: auto;
+}

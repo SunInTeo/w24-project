@@ -2,9 +2,10 @@ const drawer = document.getElementById("drawer");
 const overlay = document.getElementById("drawerOverlay");
 const drawerHeader = document.querySelector(".drawer-header");
 const drawerContent = document.querySelector(".drawer-content");
-document.addEventListener("DOMContentLoaded", () => {
-  fetchResearchPapers("papers_admin");
+document.addEventListener("DOMContentLoaded", async () => {
   initializeTable();
+  await fetchResearchPapers("papers_admin");
+
   initializeEventListeners();
 });
 
@@ -27,7 +28,10 @@ function initializeEventListeners() {
 }
 
 function renderTable(data) {
+  const tableContainer = document.querySelector(".table-container");
   const table = document.querySelector("#research_papers");
+  const noDataDiv = document.querySelector(".no-data-div");
+
   if (!table) {
     console.error("Table with ID 'research_papers' not found.");
     return;
@@ -35,23 +39,30 @@ function renderTable(data) {
 
   let tbody = table.querySelector("tbody");
   if (!tbody) {
-    console.error("The <tbody> element does not exist.");
+    console.warn("The <tbody> element does not exist. Creating one.");
     tbody = document.createElement("tbody");
     table.appendChild(tbody);
   }
+
+  tbody.innerHTML = "";
+
   if (!data.length) {
-    document.querySelector(".table-container").innerHTML = `
+    table.style.display = "none";
+    noDataDiv.innerHTML = `
       <div class="card no-data-card">
         <div class="card-header" data-i18n="no-data-available">No Data Available</div>
         <div class="card-body">
-          <span data-i18n="no-research-papers"></span>
+          <span data-i18n="no-research-papers">No research papers available.</span>
         </div>
-      </div>`;
+      </div>
+    `;
+    noDataDiv.style.display = "block";
     applyTranslations();
     return;
   }
 
-  tbody.innerHTML = "";
+  table.style.display = "table";
+  noDataDiv.style.display = "none";
 
   data.forEach((item) => {
     const row = `
@@ -76,6 +87,8 @@ function renderTable(data) {
   document.querySelectorAll(".row-checkbox").forEach((checkbox) => {
     checkbox.addEventListener("change", handleCheckboxChange);
   });
+
+  tableContainer.style.display = "block";
 }
 
 function toggleSelectAll(event) {
@@ -131,6 +144,8 @@ async function deleteSelectedEssays() {
   } catch (error) {
     console.error("Error deleting rows:", error);
     showToast("error-deleting-essays-admin", "error");
+  } finally {
+    closeModal("confirm-modal", "confirm-modal-overlay");
   }
 }
 
@@ -237,13 +252,8 @@ async function addEssay(event) {
     .querySelector("#sampleResourcesTopicText")
     .value.trim();
 
-  if (!title) {
-    showErrorMessage("error-title-required");
-    return;
-  }
-
-  if (!resources) {
-    showErrorMessage("error-resources-required");
+  if (!title || !resources) {
+    showToast("error-missing-fields", "error");
     return;
   }
 
@@ -261,16 +271,20 @@ async function addEssay(event) {
     const data = await response.json();
     if (data.status === "success") {
       fetchResearchPapers("papers_admin");
-      closeModal("add-topic-modal", "add-topic-modal-overlay");
+      document
+        .querySelector(".table-container")
+        .classList.remove("hidden-content");
       showToast("success-adding-essay-admin");
+      closeModal("add-topic-modal", "add-topic-modal-overlay");
     } else {
       showErrorModal(data.message);
     }
   } catch (error) {
-    console.error("Error adding topic:", error);
+    console.error("Error adding essay:", error);
     showToast("error-adding-essay-admin", "error");
+  } finally {
+    resetForm("add-topic-form");
   }
-  resetForm("add-topic-form");
 }
 
 async function editEssay() {

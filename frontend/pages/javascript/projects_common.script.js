@@ -4,7 +4,13 @@ const drawerHeader = document.querySelector(".drawer-header");
 const drawerContent = document.querySelector(".drawer-content");
 
 async function fetchProjects(endpoint) {
+  const spinner = document.getElementById("spinner");
+  const tableContainer = document.querySelector(".table-container");
+
   try {
+    spinner.style.display = "flex";
+    tableContainer.style.display = "none";
+
     const response = await fetch(
       `/w24-project/backend/projects_${endpoint}.php`,
       {
@@ -16,21 +22,24 @@ async function fetchProjects(endpoint) {
     const data = await response.json();
 
     if (data.status === "success") {
-      const projectTopics = data.data.map((project) => ({
+      const sortedData = data.data.sort((a, b) => a.project_id - b.project_id);
+      const projectTopics = sortedData.map((project) => ({
         projectId: project.project_id,
-
         projectTitle: project.title,
       }));
 
       localStorage.setItem("project_topics", JSON.stringify(projectTopics));
-      renderProjects(data.data);
+      renderProjects(sortedData);
+      tableContainer.style.display = "block";
     } else {
-      console.error("Error:", data.message);
+      console.error("Error fetching projects:", data.message);
       showToast("error-fetching", "error");
     }
   } catch (error) {
     console.error("Error fetching projects:", error);
     showToast("error-fetching", "error");
+  } finally {
+    spinner.style.display = "none";
   }
 }
 

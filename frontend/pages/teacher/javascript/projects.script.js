@@ -18,31 +18,39 @@ function initializeListeners() {
 }
 
 function renderProjects(projects) {
+  const tableContainer = document.querySelector(".table-container");
   const table = document.querySelector("#project_topics");
-  if (!table) {
-    console.error("Table with ID 'project_topics' not found.");
+  const noDataDiv = document.querySelector(".no-data-div");
+
+  if (!table || !tableContainer || !noDataDiv) {
+    console.error("Required elements not found.");
     return;
   }
 
   let tbody = table.querySelector("tbody");
-  if (!tbody) {
-    console.error("The <tbody> element does not exist.");
-    tbody = document.createElement("tbody");
-    table.appendChild(tbody);
-  }
-  if (!projects.length) {
-    document.querySelector(".table-container").innerHTML = `
+  tbody.innerHTML = "";
+
+  if (!projects || projects.length === 0) {
+    tableContainer.style.display = "block";
+    table.style.display = "none";
+
+    noDataDiv.innerHTML = `
       <div class="card no-data-card">
         <div class="card-header" data-i18n="no-data-available">No Data Available</div>
         <div class="card-body">
-          <span data-i18n="no-projects-papers"></span>
+          <span data-i18n="no-projects-papers">No projects available at the moment.</span>
         </div>
-      </div>`;
+      </div>
+    `;
+
+    noDataDiv.style.display = "block";
     applyTranslations();
     return;
   }
 
-  tbody.innerHTML = "";
+  noDataDiv.style.display = "none";
+  table.style.display = "table";
+  tableContainer.style.display = "block";
 
   projects.forEach((project) => {
     const row = document.createElement("tr");
@@ -52,7 +60,7 @@ function renderProjects(projects) {
       }"></td>
       <td>${project.project_id}</td>
       <td>${project.title}</td>
-      <td>${project.description}</td>
+      <td>${project.description || "-"}</td>
       <td>${project.example_distribution_1 || "-"}</td>
       <td>${project.example_distribution_2 || "-"}</td>
       <td>${project.example_distribution_3 || "-"}</td>
@@ -68,7 +76,6 @@ function renderProjects(projects) {
     row
       .querySelector(".row-checkbox")
       .addEventListener("change", handleRowCheckbox);
-
     tbody.appendChild(row);
   });
 }
@@ -289,6 +296,7 @@ async function deleteSelectedProjects() {
       });
       document.querySelector("#select-all").checked = false;
       updateRemoveButtonState();
+      fetchProjects("admin");
       showToast("success-deleting-projects-admin");
     } else {
       showErrorModal(data.message || "Failed to delete selected projects.");
@@ -473,4 +481,3 @@ function displayErrorMessage(message) {
     errorContainer.style.display = "none";
   }, 5000);
 }
-
