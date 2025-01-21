@@ -116,3 +116,76 @@ img#sleepy-cat {
 .above-img-container {
   display: contents;
 }
+
+@media (min-width: 1300px) and (min-height: 1096px) {
+  main {
+    width: 60%;
+    max-width: 1400px;
+    height: 600px;
+  }
+
+  .login,
+  .signup {
+    font-size: 26px;
+    gap: 30px;
+  }
+
+  .login {
+    padding-top: 50px;
+  }
+
+  .signup {
+    padding-top: 50px;
+  }
+
+  form {
+    max-width: 800px;
+    padding: 0px 40px;
+  }
+
+  img#chill-cat {
+    width: 90%;
+    height: 80%;
+  }
+
+  img#sleepy-cat {
+    width: 80%;
+    height: 60%;
+    padding: 0px;
+  }
+
+  .forgotten-password-container {
+    font-size: 18px;
+  }
+
+  .signup-button {
+    font-size: 20px;
+    padding: 15px 40px;
+  }
+
+  .modal {
+    max-width: 500px;
+  }
+
+  .above-img-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .login-form {
+    transform: translateX(-50%);
+  }
+
+  .signup-form {
+    transform: translateX(50%);
+  }
+}
+
+@media (min-width: 1400px) and (min-height: 1096px) {
+  .signup {
+    padding-top: 0px;
+  }
+}
