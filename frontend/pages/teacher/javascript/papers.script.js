@@ -120,7 +120,7 @@ async function deleteSelectedEssays() {
   }
 
   try {
-    const response = await fetch("/w24-project/backend/papers_admin.php", {
+    const response = await fetch("../../../backend/papers_admin.php", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ids: selectedIds }),
@@ -263,7 +263,7 @@ async function addEssay(event) {
   formData.append("resources", resources);
 
   try {
-    const response = await fetch("/w24-project/backend/papers_admin.php", {
+    const response = await fetch("../../../backend/papers_admin.php", {
       method: "POST",
       body: formData,
     });
@@ -307,7 +307,7 @@ async function editEssay() {
   };
 
   try {
-    const response = await fetch("/w24-project/backend/papers_admin.php", {
+    const response = await fetch("../../../backend/papers_admin.php", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(essayData),

@@ -161,7 +161,7 @@ async function editEssayStudent() {
   }
 
   try {
-    const response = await fetch("/w24-project/backend/papers_student.php", {
+    const response = await fetch("../../../backend/papers_student.php", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(essayData),
@@ -245,7 +245,7 @@ document
     }
 
     try {
-      const response = await fetch("./propose_topic.php", {
+      const response = await fetch("../../../propose_topic.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

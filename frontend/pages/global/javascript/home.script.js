@@ -29,7 +29,7 @@ function navigateToHome() {
 
 async function handleLogout() {
   try {
-    const response = await fetch("/w24-project/backend/logout.php");
+    const response = await fetch("../../../backend/logout.php");
 
     if (response.ok) {
       const result = await response.json();
@@ -62,7 +62,7 @@ async function fetchUserById(userId) {
 
   try {
     const response = await fetch(
-      `/w24-project/backend/fetch_user_by_id.php?user_id=${encodeURIComponent(
+      `../../../backend/fetch_user_by_id.php?user_id=${encodeURIComponent(
         userId
       )}`,
       {

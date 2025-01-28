@@ -81,7 +81,7 @@ async function addQuestionAnswer() {
   };
 
   try {
-    const response = await fetch("/w24-project/backend/faq_admin.php", {
+    const response = await fetch("../../../backend/faq_admin.php", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -119,7 +119,7 @@ async function deleteQuestion(question) {
   };
 
   try {
-    const response = await fetch("/w24-project/backend/faq_admin.php", {
+    const response = await fetch("../../../backend/faq_admin.php", {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

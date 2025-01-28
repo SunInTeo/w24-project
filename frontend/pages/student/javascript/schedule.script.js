@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 async function fetchPresentationDays() {
   try {
-    const response = await fetch("/w24-project/backend/schedule_admin.php", {
+    const response = await fetch("../../../backend/schedule_admin.php", {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });
@@ -74,7 +74,8 @@ async function showDayData(dayId, dayIndex, date, presentationType) {
 
   try {
     const response = await fetch(
-      `/w24-project/backend/fetch_schedule_by_day.php?day_date=${date}&presentation_type=${presentationType}`
+      `../../../backend/fetch_schedule_by_day.php?day_date=${date}&presentation_type=${presentationType}`,
+      { method: "GET", headers: { "Content-Type": "application/json" } }
     );
     const data = await response.json();
 
@@ -287,7 +288,7 @@ function renderRemoveScheduleButtons() {
 async function fetchFreeTimeSlots(dayDate, presentationType) {
   try {
     const response = await fetch(
-      `/w24-project/backend/fetch_free_time_slots.php?day_date=${encodeURIComponent(
+      `../../../backend/fetch_free_time_slots.php?day_date=${encodeURIComponent(
         dayDate
       )}&presentation_type=${encodeURIComponent(presentationType)}`
     );
@@ -442,7 +443,7 @@ async function submitTimeslotForm() {
   };
 
   try {
-    const response = await fetch("/w24-project/backend/schedule_student.php", {
+    const response = await fetch("../../../backend/schedule_student.php", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -486,7 +487,7 @@ async function submitTimeslotForm() {
 
 async function removeFromSchedule(userId, presentationType) {
   try {
-    const response = await fetch("/w24-project/backend/schedule_student.php", {
+    const response = await fetch("../../../backend/schedule_student.php", {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

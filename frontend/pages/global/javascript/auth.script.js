@@ -110,7 +110,7 @@ async function handleRegister() {
   formData.append("password", password);
 
   try {
-    const response = await fetch("/w24-project/backend/register.php", {
+    const response = await fetch("../../../backend/register.php", {
       method: "POST",
       body: formData,
     });
@@ -150,7 +150,7 @@ async function handleLogin() {
   formData.append("password", password);
 
   try {
-    const response = await fetch("/w24-project/backend/login.php", {
+    const response = await fetch("../../../backend/login.php", {
       method: "POST",
       body: formData,
     });
@@ -189,7 +189,7 @@ function setUserInLocalStorage(result) {
 
 async function checkUserSession() {
   try {
-    const response = await fetch("/w24-project/backend/validate_session.php");
+    const response = await fetch("../../../validate_session.php");
     if (response.status === 401) {
       console.warn("User is not logged in, redirecting...");
       if (!window.location.pathname.includes("auth.html")) {

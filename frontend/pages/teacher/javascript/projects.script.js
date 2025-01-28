@@ -187,7 +187,7 @@ async function createNewProject() {
   };
 
   try {
-    const response = await fetch("/w24-project/backend/projects_admin.php", {
+    const response = await fetch("../../../backend/projects_admin.php", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(projectData),
@@ -245,7 +245,7 @@ async function editProject() {
   }
 
   try {
-    const response = await fetch("/w24-project/backend/projects_admin.php", {
+    const response = await fetch("../../../backend/projects_admin.php", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(projectData),
@@ -277,7 +277,7 @@ async function deleteSelectedProjects() {
   }
 
   try {
-    const response = await fetch("/w24-project/backend/projects_admin.php", {
+    const response = await fetch("../../../backend/projects_admin.php", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ project_ids: selectedIds }),
@@ -393,7 +393,7 @@ function searchByProject() {
 async function fetchTeamsByProjectId(projectId) {
   try {
     const response = await fetch(
-      `/w24-project/backend/fetch_teams_by_project.php?project_id=${encodeURIComponent(
+      `../../../backend/fetch_teams_by_project.php?project_id=${encodeURIComponent(
         projectId
       )}`,
       {

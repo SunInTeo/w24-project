@@ -21,7 +21,7 @@ async function fetchResearchPapers(endpoint) {
     spinner.style.display = "flex";
     tableContainer.style.display = "none";
 
-    const response = await fetch(`/w24-project/backend/${endpoint}.php`);
+    const response = await fetch(`../../../backend/${endpoint}.php`);
     const data = await response.json();
 
     if (data.status === "success") {

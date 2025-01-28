@@ -13,7 +13,7 @@ function sendProposeTopic(type) {
 
 async function proposeTopic(topicLabel, topicInfo, type) {
   try {
-    const response = await fetch("/w24-project/backend/propose_topic.php", {
+    const response = await fetch("../../../backend/propose_topic.php", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -48,7 +48,7 @@ async function proposeTopic(topicLabel, topicInfo, type) {
 async function fetchAndDisplayProposedTopics(type) {
   try {
     const response = await fetch(
-      `/w24-project/backend/get_proposed_topics.php?proposal_type=${type}`
+      `../../../backend/get_proposed_topics.php?proposal_type=${type}`
     );
 
     if (!response.ok) {
@@ -125,7 +125,7 @@ async function fetchAndDisplayProposedTopics(type) {
 async function deleteProposedTopic(topicId, topicElement) {
   try {
     const response = await fetch(
-      `/w24-project/backend/get_proposed_topics.php?topic_id=${topicId}`,
+      `../../../backend/get_proposed_topics.php?topic_id=${topicId}`,
       {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },

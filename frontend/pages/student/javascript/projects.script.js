@@ -397,7 +397,7 @@ async function assignTeamToProject(projectId, teamDetails) {
       team: teamDetails,
     };
 
-    const response = await fetch("/w24-project/backend/projects_student.php", {
+    const response = await fetch("../../../backend/projects_student.php", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -428,7 +428,7 @@ async function editTeamDetails(projectId, updatedDetails) {
       updated_details: updatedDetails,
     };
 
-    const response = await fetch("/w24-project/backend/projects_student.php", {
+    const response = await fetch("../../../backend/projects_student.php", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -538,7 +538,7 @@ async function fetchUserTeam() {
 
   try {
     const response = await fetch(
-      `/w24-project/backend/team_methods.php?user_id=${encodeURIComponent(
+      `../../../backend/team_methods.php?user_id=${encodeURIComponent(
         user_id
       )}`,
       {
@@ -586,7 +586,7 @@ async function deleteTeam() {
   }
 
   try {
-    const response = await fetch("/w24-project/backend/projects_student.php", {
+    const response = await fetch("../../../backend/projects_student.php", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ team_id: teamId }),

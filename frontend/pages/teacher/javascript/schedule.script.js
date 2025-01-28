@@ -1,6 +1,6 @@
 async function fetchPresentationDays() {
   try {
-    const response = await fetch("/w24-project/backend/schedule_admin.php", {
+    const response = await fetch("../../../backend/schedule_admin.php", {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });
@@ -81,7 +81,7 @@ async function fetchUsersPresentationsByDay(dayDate, presentationType, dayId) {
 
   try {
     const response = await fetch(
-      `/w24-project/backend/fetch_schedule_by_day.php?day_date=${encodeURIComponent(
+      `../../../backend/fetch_schedule_by_day.php?day_date=${encodeURIComponent(
         dayDate
       )}&presentation_type=${encodeURIComponent(presentationType)}`,
       {
@@ -111,7 +111,7 @@ async function showDayData(dayId) {
 
   try {
     const response = await fetch(
-      `/w24-project/backend/schedule_admin.php?day_id=${dayId}`
+      `../../../backend/schedule_admin.php?day_id=${dayId}`
     );
     const data = await response.json();
 
@@ -241,7 +241,7 @@ function confirmDeleteSelectedDay(dayId) {
 }
 async function deleteDay(dayId) {
   try {
-    const response = await fetch("/w24-project/backend/schedule_admin.php", {
+    const response = await fetch("../../../backend/schedule_admin.php", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ day_id: dayId }),
@@ -337,7 +337,7 @@ async function saveDay() {
   };
 
   try {
-    const response = await fetch("/w24-project/backend/schedule_admin.php", {
+    const response = await fetch("../../../backend/schedule_admin.php", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

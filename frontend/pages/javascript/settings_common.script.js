@@ -13,7 +13,7 @@ async function changePassword() {
   }
 
   try {
-    const response = await fetch("/w24-project/backend/change_pass.php", {
+    const response = await fetch("../../../backend/change_pass.php", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

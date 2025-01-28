@@ -3,7 +3,6 @@ main {
   grid-template-columns: 1fr 1fr;
   align-items: stretch;
   justify-content: center;
-  width: 70%;
   border-radius: 20px;
   overflow: hidden;
   margin: auto;

@@ -11,13 +11,10 @@ async function fetchProjects(endpoint) {
     spinner.style.display = "flex";
     tableContainer.style.display = "none";
 
-    const response = await fetch(
-      `/w24-project/backend/projects_${endpoint}.php`,
-      {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      }
-    );
+    const response = await fetch(`../../../backend/projects_${endpoint}.php`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
 
     const data = await response.json();
 
